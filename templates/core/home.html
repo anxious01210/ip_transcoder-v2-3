@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>IP TransCoder</title>
+
+  <style>
+      :root {
+          --accent: #22c55e;
+          --accent-dark: #16a34a;
+      }
+
+      body {
+          margin: 0;
+          font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+          background: #0b1220;
+          color: #e9eefc;
+      }
+
+      .wrap {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 48px 20px;
+      }
+
+      .card {
+          background: rgba(255, 255, 255, .06);
+          border: 1px solid rgba(255, 255, 255, .12);
+          border-radius: 18px;
+          padding: 28px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
+      }
+
+      .top {
+          display: flex;
+          gap: 18px;
+          align-items: center;
+      }
+
+      .logo {
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          background: linear-gradient(135deg, #7c3aed, var(--accent));
+          box-shadow: 0 10px 30px rgba(124, 58, 237, .25);
+          flex-shrink: 0;
+      }
+
+      h1 {
+          margin: 0;
+          font-size: 34px;
+          letter-spacing: .2px;
+      }
+
+      .muted {
+          color: rgba(233, 238, 252, .72);
+          margin-top: 6px;
+      }
+
+      /* ACTION BUTTONS */
+      .actions {
+          margin-top: 18px;
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+      }
+
+      .btn {
+          display: inline-flex;
+          align-items: center;
+          padding: 11px 16px;
+          border-radius: 12px;
+          text-decoration: none;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform .18s ease,
+          box-shadow .18s ease,
+          background-color .18s ease,
+          border-color .18s ease;
+          will-change: transform;
+      }
+
+      .btn-primary {
+          background: var(--accent);
+          color: #07120a;
+          box-shadow: 0 6px 18px rgba(34, 197, 94, .35);
+      }
+
+      .btn-primary:hover {
+          background: var(--accent-dark);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 26px rgba(34, 197, 94, .45);
+      }
+
+      .btn-ghost {
+          background: rgba(255, 255, 255, .06);
+          color: #e9eefc;
+          border: 1px solid rgba(255, 255, 255, .14);
+      }
+
+      .btn-ghost:hover {
+          background: rgba(255, 255, 255, .12);
+          border-color: rgba(255, 255, 255, .25);
+          transform: translateY(-2px);
+      }
+
+      .btn:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 2px;
+      }
+
+      /* GRID */
+      .grid {
+          margin-top: 22px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 14px;
+      }
+
+      .tile {
+          background: rgba(255, 255, 255, .05);
+          border: 1px solid rgba(255, 255, 255, .10);
+          border-radius: 14px;
+          padding: 16px;
+          transition: transform .18s ease,
+          box-shadow .18s ease,
+          border-color .18s ease;
+      }
+
+      .tile:hover {
+          transform: translateY(-3px);
+          border-color: rgba(255, 255, 255, .25);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      }
+
+      .tile h3 {
+          margin: 0 0 6px;
+          font-size: 14px;
+          letter-spacing: .3px;
+          text-transform: uppercase;
+          color: rgba(233, 238, 252, .85);
+      }
+
+      .tile p {
+          margin: 0;
+          color: rgba(233, 238, 252, .68);
+          font-size: 14px;
+          line-height: 1.45;
+      }
+
+      .foot {
+          margin-top: 18px;
+          color: rgba(233, 238, 252, .55);
+          font-size: 12px;
+      }
+
+      @media (max-width: 900px) {
+          .grid {
+              grid-template-columns: 1fr;
+          }
+      }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="top">
+      <div class="logo"></div>
+      <div>
+        <h1>IP TransCoder</h1>
+        <div class="muted">
+          Live IP stream testing • Recording & time-shift • FFmpeg-based output
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/admin/">Open Admin Panel</a>
+      <a class="btn btn-ghost" href="/admin/transcoder/channel/">Channels</a>
+      <a class="btn btn-ghost" href="/admin/transcoder/overview/">System Overview</a>
+    </div>
+
+    <div class="grid">
+      <div class="tile">
+        <h3>Unicast Output</h3>
+        <p>Send to one receiver: <b>udp://10.120.0.120:5002</b> and play with FFplay or VLC.</p>
+      </div>
+      <div class="tile">
+        <h3>Multicast Output</h3>
+        <p>One stream → many clients on the subnet (when enabled): <b>udp://239.x.x.x:port</b>.</p>
+      </div>
+      <div class="tile">
+        <h3>Health & Logs</h3>
+        <p>Check FFmpeg logs, stream status, and troubleshooting directly from admin tools.</p>
+      </div>
+    </div>
+
+    <div class="foot">
+      Tip: If “/” shows this page but “/admin/” fails, it’s usually Nginx proxy or ALLOWED_HOSTS.
+    </div>
+  </div>
+</div>
+</body>
+</html>

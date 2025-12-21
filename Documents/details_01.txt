@@ -1,0 +1,103 @@
+rtsp://admin:B!sk2025@192.168.137.95:554/Streaming/Channels/101/
+
+
+(.venv) rio@GP73:~/100_Py/ip_transcoder$ python manage.py show_ffmpeg_cmd 2
+Channel: File Test 1
+FFmpeg command:
+ffmpeg -y -hide_banner -loglevel warning -i /home/rio/test_media/testsrc.mp4 -c:v copy -c:a copy -f hls -hls_time 4 -hls_list_size 10 -hls_flags delete_segments /tmp/hls_test1/index.m3u8
+(.venv) rio@GP73:~/100_Py/ip_transcoder$ python manage.py show_ffmpeg_cmd 1
+Channel: Test Multicast 1
+FFmpeg command:
+ffmpeg -y -hide_banner -loglevel warning -i 'udp://@224.2.2.2:2001?fifo_size=1000000&overrun_nonfatal=1' -c:v copy -c:a copy -f hls -hls_time 4 -hls_list_size 10 -hls_flags delete_segments /tmp/hls_test1/index.m3u8
+
+rio@GP73:~$ ffmpeg -y -hide_banner -loglevel warning -i /home/rio/test_media/testsrc.mp4 -c:v copy -c:a copy -f hls -hls_time 4 -hls_list_size 10 -hls_flags delete_segments /tmp/hls_test1/index.m3u8
+rio@GP73:~$ ls /tmp/hls_test1/
+index0.ts  index1.ts  index2.ts  index.m3u8
+rio@GP73:~$ 
+
+
+On windows you can have ffmpeg with going to the below link:
+https://www.gyan.dev/ffmpeg/builds/
+and download:
+ffmpeg-git-full.7z
+into C:\ffmpeg and add this to the windows env variable path and test it with:
+ffmpeg -version
+ffprobe -version
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+Run this exact FFmpeg command on either OS:
+    ffmpeg -f lavfi -i testsrc=size=1280x720:rate=30 -t 30 -pix_fmt yuv420p media/test_media/testsrc.mp4
+
+| Flag               | Meaning                                    |
+| ------------------ | ------------------------------------------ |
+| `-f lavfi`         | Use FFmpeg’s built-in test generator       |
+| `testsrc=...`      | Moving color bars with a timestamp counter |
+| `-t 30`            | Generate 30 seconds                        |
+| `-pix_fmt yuv420p` | Widely compatible pixel format             |
+| Output             | `media/test_media/testsrc.mp4`             |
+
+After running, you should see something like:
+Output #0, mp4, to 'media/test_media/testsrc.mp4':
+frame= 900 fps=30 q=-1 ...
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+4️⃣ Optional: quick direct test without the enforcer
+If you want to sanity-check just one job manually:
+python manage.py run_channel_ffmpeg <id> --purpose record
+Where <id> = the ID of File Test 24h (you can see it in the URL in admin, e.g. /admin/transcoder/channel/3/change/ → ID = 3).
+
+That should also drop a TS file under:
+media/recordings/File Test 24h/<today>/File Test 24h_00000.ts
+
+I have:
+(.venv) PS C:\prjs\ip_transcoder> python manage.py run_channel_ffmpeg 4 --purpose record
+Running FFmpeg:
+ffmpeg -y -hide_banner -loglevel warning -i C:\prjs\ip_transcoder\media\test_media\testsrc.mp4 -c:v copy -c:a copy -f segment -segment_time 60 -reset_timestamps 1 C:\prjs\ip_transcoder\media\recordings\File Test 24h\20251210\File Test 24h_%05d.ts
+FFmpeg stopped.
+(.venv) PS C:\prjs\ip_transcoder
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+on windows in PowerShell from the Project root folder, to create the file:
+    ffmpeg -f lavfi -i testsrc=size=1280x720:rate=30 -t 30 -pix_fmt yuv420p .\media\test_media\testsrc.mp4
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+on linux machine to create testsrc.mp4 do:
+
+mkdir -p media/test_media
+
+```
+ffmpeg \
+  -f lavfi -i testsrc=size=1280x720:rate=25 \
+  -f lavfi -i sine=frequency=1000:sample_rate=48000 \
+  -t 300 \
+  -c:v libx264 -pix_fmt yuv420p \
+  -c:a aac -b:a 128k \
+  media/test_media/testsrc.mp4
+```
+This will create a 5-minute color bars + tone video at:
+/home/rio/100_Py/ip_transcoder/media/test_media/testsrc.mp4
+
+You can quickly verify:
+ls -lh media/test_media/
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+to start a multicat on Ubuntu to test:
+ffmpeg -re   -f lavfi -i testsrc=size=1280x720:rate=25   -f lavfi -i sine=frequency=1000:sample_rate=48000   -c:v libx264 -preset veryfast -tune zerolatency   -c:a aac -b:a 128k   -f mpegts "udp://239.10.10.10:5001?pkt_size=1316&ttl=1"
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+to see logs:
+sudo journalctl -u ip_transcoder_enforcer.service -f
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+| ------------------------------------------  /\/\/\/\  ------------------------------------------ |
+
+
+

@@ -1,0 +1,607 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block branding %}
+  <h1 id="site-name"><a href="{% url 'admin:index' %}">IP TransCoder</a></h1>
+{% endblock %}
+
+{% block extrastyle %}
+  <style>
+      :root {
+          --card-bg: #111827;
+          --card-border: rgba(255, 255, 255, .08);
+          --muted: rgba(255, 255, 255, .72);
+          --muted2: rgba(255, 255, 255, .58);
+          --accent: #60a5fa;
+          --ok: #22c55e;
+          --warn: #f59e0b;
+          --bad: #ef4444;
+      }
+
+      .ipx-wrap {
+          width: 80vw;
+          max-width: 1600px;
+          margin: 20px auto;
+          padding: 0 16px;
+      }
+
+      .ipx-hero {
+          border: 1px solid var(--card-border);
+          background: linear-gradient(180deg, rgba(96, 165, 250, .08), rgba(255, 255, 255, .02));
+          border-radius: 14px;
+          padding: 18px 18px 14px;
+      }
+
+      .ipx-hero h1 {
+          margin: 0 0 8px;
+          font-size: 22px;
+      }
+
+      .ipx-hero p {
+          margin: 6px 0;
+          color: var(--muted);
+      }
+
+      .ipx-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
+          margin-top: 14px;
+      }
+
+      @media (min-width: 980px) {
+          .ipx-grid {
+              grid-template-columns: 1.2fr .8fr;
+          }
+      }
+
+      .ipx-card {
+          border: 1px solid var(--card-border);
+          background: rgba(17, 24, 39, .78);
+          border-radius: 14px;
+          padding: 14px;
+      }
+
+      .ipx-card h2 {
+          margin: 0 0 8px;
+          font-size: 15px;
+          letter-spacing: .2px;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, .86);
+      }
+
+      .ipx-card p, .ipx-card li {
+          color: var(--muted);
+          line-height: 1.55;
+      }
+
+      .ipx-card ul {
+          margin: 8px 0 0;
+          padding-left: 18px;
+      }
+
+      .ipx-muted {
+          color: var(--muted2);
+      }
+
+      details.ipx-details {
+          border: 1px solid var(--card-border);
+          border-radius: 12px;
+          padding: 10px 12px;
+          background: rgba(0, 0, 0, .10);
+          margin-top: 10px;
+      }
+
+      details.ipx-details > summary {
+          cursor: pointer;
+          font-weight: 600;
+          color: rgba(255, 255, 255, .9);
+      }
+
+      details.ipx-details > summary::marker {
+          color: var(--accent);
+      }
+
+      details.ipx-details p {
+          margin: 8px 0;
+      }
+
+      code.ipx-code, pre.ipx-pre {
+          background: rgba(0, 0, 0, .35);
+          border: 1px solid var(--card-border);
+          border-radius: 10px;
+          padding: 2px 6px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          color: rgba(255, 255, 255, .92);
+      }
+
+      pre.ipx-pre {
+          padding: 10px 12px;
+          overflow: auto;
+      }
+
+      .ipx-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          border: 1px solid var(--card-border);
+          border-radius: 999px;
+          padding: 3px 10px;
+          margin: 2px 6px 2px 0;
+          background: rgba(0, 0, 0, .16);
+          color: rgba(255, 255, 255, .86);
+          font-size: 12px;
+      }
+
+      .ipx-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          display: inline-block;
+          background: var(--muted2);
+      }
+
+      .ipx-dot.ok {
+          background: var(--ok);
+      }
+
+      .ipx-dot.warn {
+          background: var(--warn);
+      }
+
+      .ipx-dot.bad {
+          background: var(--bad);
+      }
+
+      table.ipx-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+          overflow: hidden;
+          border-radius: 12px;
+          border: 1px solid var(--card-border);
+      }
+
+      table.ipx-table th, table.ipx-table td {
+          padding: 10px 10px;
+          border-bottom: 1px solid rgba(255, 255, 255, .06);
+          vertical-align: top;
+      }
+
+      table.ipx-table th {
+          text-align: left;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, .78);
+          background: rgba(0, 0, 0, .22);
+      }
+
+      table.ipx-table td {
+          color: rgba(255, 255, 255, .86);
+      }
+
+      .ipx-small {
+          font-size: 12px;
+          color: var(--muted2);
+      }
+
+      .ipx-status-ok {
+          color: var(--ok);
+          font-weight: 700;
+      }
+
+      .ipx-status-warn {
+          color: var(--warn);
+          font-weight: 700;
+      }
+
+      .ipx-status-bad {
+          color: var(--bad);
+          font-weight: 700;
+      }
+
+      .ipx-kv {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+          margin-top: 8px;
+      }
+
+      @media (min-width: 720px) {
+          .ipx-kv {
+              grid-template-columns: 1fr 1fr;
+          }
+      }
+
+      .ipx-kv > div {
+          border: 1px solid rgba(255, 255, 255, .06);
+          background: rgba(0, 0, 0, .14);
+          border-radius: 12px;
+          padding: 10px 12px;
+      }
+
+      .ipx-kv b {
+          display: block;
+          font-size: 12px;
+          letter-spacing: .2px;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, .78);
+          margin-bottom: 6px;
+      }
+
+      /* ------------------------------------------------------------
+         Light-mode compatibility FIX (only for the bottom results table)
+         - Django admin light theme overrides <table>/<th>/<td> colors.
+         - We override ONLY the channels results section.
+         ------------------------------------------------------------ */
+
+
+      /* Light-mode fix: HERO only (top section). Keep everything else unchanged. */
+      :root[data-theme="light"] .ipx-hero,
+      html[data-theme="light"] .ipx-hero,
+      body[data-theme="light"] .ipx-hero,
+      html.theme-light .ipx-hero,
+      body.theme-light .ipx-hero {
+          background: linear-gradient(180deg, rgba(56, 189, 248, 0.14), rgba(255, 255, 255, 0.92)) !important;
+          border-color: rgba(15, 23, 42, 0.12) !important;
+          box-shadow: 0 12px 28px rgba(2, 6, 23, 0.08) !important;
+      }
+
+      :root[data-theme="light"] .ipx-hero h1,
+      html[data-theme="light"] .ipx-hero h1,
+      body[data-theme="light"] .ipx-hero h1,
+      html.theme-light .ipx-hero h1,
+      body.theme-light .ipx-hero h1 {
+          color: #0f172a !important;
+      }
+
+      :root[data-theme="light"] .ipx-hero p,
+      html[data-theme="light"] .ipx-hero p,
+      body[data-theme="light"] .ipx-hero p,
+      html.theme-light .ipx-hero p,
+      body.theme-light .ipx-hero p {
+          color: #334155 !important;
+      }
+
+      :root[data-theme="light"] .ipx-hero .ipx-pill,
+      html[data-theme="light"] .ipx-hero .ipx-pill,
+      body[data-theme="light"] .ipx-hero .ipx-pill,
+      html.theme-light .ipx-hero .ipx-pill,
+      body.theme-light .ipx-hero .ipx-pill {
+          background: rgba(15, 23, 42, 0.06) !important;
+          border-color: rgba(15, 23, 42, 0.14) !important;
+          color: #0f172a !important;
+      }
+
+      @media (prefers-color-scheme: light) {
+          .ipx-hero {
+              background: linear-gradient(180deg, rgba(56, 189, 248, 0.14), rgba(255, 255, 255, 0.92)) !important;
+              border-color: rgba(15, 23, 42, 0.12) !important;
+              box-shadow: 0 12px 28px rgba(2, 6, 23, 0.08) !important;
+          }
+
+          .ipx-hero h1 {
+              color: #0f172a !important;
+          }
+
+          .ipx-hero p {
+              color: #334155 !important;
+          }
+
+          .ipx-hero .ipx-pill {
+              background: rgba(15, 23, 42, 0.06) !important;
+              border-color: rgba(15, 23, 42, 0.14) !important;
+              color: #0f172a !important;
+          }
+      }
+
+      /* Targets common Django admin theme toggles + fallback to OS light preference. */
+      :root[data-theme="light"] .ipx-results .ipx-table,
+      html[data-theme="light"] .ipx-results .ipx-table,
+      body[data-theme="light"] .ipx-results .ipx-table,
+      html.theme-light .ipx-results .ipx-table,
+      body.theme-light .ipx-results .ipx-table {
+          color: #e8eef6 !important;
+          background: transparent !important;
+      }
+
+      :root[data-theme="light"] .ipx-results .ipx-table thead,
+      :root[data-theme="light"] .ipx-results .ipx-table thead tr,
+      :root[data-theme="light"] .ipx-results .ipx-table thead th,
+      html[data-theme="light"] .ipx-results .ipx-table thead,
+      html[data-theme="light"] .ipx-results .ipx-table thead tr,
+      html[data-theme="light"] .ipx-results .ipx-table thead th,
+      body[data-theme="light"] .ipx-results .ipx-table thead,
+      body[data-theme="light"] .ipx-results .ipx-table thead tr,
+      body[data-theme="light"] .ipx-results .ipx-table thead th,
+      html.theme-light .ipx-results .ipx-table thead,
+      html.theme-light .ipx-results .ipx-table thead tr,
+      html.theme-light .ipx-results .ipx-table thead th,
+      body.theme-light .ipx-results .ipx-table thead,
+      body.theme-light .ipx-results .ipx-table thead tr,
+      body.theme-light .ipx-results .ipx-table thead th {
+          background: rgba(0, 0, 0, 0.30) !important;
+          color: #e8eef6 !important;
+          border-color: rgba(255, 255, 255, 0.12) !important;
+      }
+
+      :root[data-theme="light"] .ipx-results .ipx-table tbody,
+      :root[data-theme="light"] .ipx-results .ipx-table tbody tr,
+      :root[data-theme="light"] .ipx-results .ipx-table tbody td,
+      html[data-theme="light"] .ipx-results .ipx-table tbody,
+      html[data-theme="light"] .ipx-results .ipx-table tbody tr,
+      html[data-theme="light"] .ipx-results .ipx-table tbody td,
+      body[data-theme="light"] .ipx-results .ipx-table tbody,
+      body[data-theme="light"] .ipx-results .ipx-table tbody tr,
+      body[data-theme="light"] .ipx-results .ipx-table tbody td,
+      html.theme-light .ipx-results .ipx-table tbody,
+      html.theme-light .ipx-results .ipx-table tbody tr,
+      html.theme-light .ipx-results .ipx-table tbody td,
+      body.theme-light .ipx-results .ipx-table tbody,
+      body.theme-light .ipx-results .ipx-table tbody tr,
+      body.theme-light .ipx-results .ipx-table tbody td {
+          background: transparent !important;
+          color: #e8eef6 !important;
+          border-color: rgba(255, 255, 255, 0.10) !important;
+      }
+
+      :root[data-theme="light"] .ipx-results .ipx-table tbody tr:hover td,
+      html[data-theme="light"] .ipx-results .ipx-table tbody tr:hover td,
+      body[data-theme="light"] .ipx-results .ipx-table tbody tr:hover td,
+      html.theme-light .ipx-results .ipx-table tbody tr:hover td,
+      body.theme-light .ipx-results .ipx-table tbody tr:hover td {
+          background: rgba(255, 255, 255, 0.06) !important;
+      }
+
+      /* OS preference fallback (if Django theme attributes are not present). */
+      @media (prefers-color-scheme: light) {
+          .ipx-results .ipx-table,
+          .ipx-results .ipx-table thead,
+          .ipx-results .ipx-table thead tr,
+          .ipx-results .ipx-table thead th,
+          .ipx-results .ipx-table tbody,
+          .ipx-results .ipx-table tbody tr,
+          .ipx-results .ipx-table tbody td {
+              background: transparent !important;
+              color: #e8eef6 !important;
+              border-color: rgba(255, 255, 255, 0.10) !important;
+          }
+
+          .ipx-results .ipx-table thead th {
+              background: rgba(0, 0, 0, 0.30) !important;
+          }
+
+          .ipx-results .ipx-table tbody tr:hover td {
+              background: rgba(255, 255, 255, 0.06) !important;
+          }
+      }
+
+      /* Force the top-left Admin branding text to stay yellow (light + dark) */
+      #header #site-name a,
+      #header #site-name a:visited,
+      #site-name a,
+      #site-name a:visited {
+          color: #facc15 !important; /* yellow */
+      }
+
+      #header #site-name a:hover,
+      #site-name a:hover {
+          color: #fde047 !important; /* slightly brighter yellow on hover */
+          text-decoration: none !important;
+      }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="ipx-wrap">
+
+    <div class="ipx-hero">
+      <h1>{{ title|default:"IP Transcoder Overview" }}</h1>
+      <p>
+        This page is the “control room” for channels: each <b>Channel</b> defines an <b>input</b>, an <b>output</b>, and
+        an optional weekly schedule.
+        Use it to confirm what is configured, what is enabled, and what outputs your customer can test.
+      </p>
+      <p class="ipx-muted">
+        Tip: the <span class="ipx-pill"><span class="ipx-dot ok"></span>Unicast</span> and
+        <span class="ipx-pill"><span class="ipx-dot warn"></span>Multicast</span>
+        are just different <b>destination types</b> for the same UDP-TS output.
+      </p>
+    </div>
+
+    <div class="ipx-grid">
+
+      <div class="ipx-card">
+        <h2>How outputs work</h2>
+        <p>
+          Most customers think “Unicast output” and “Multicast output” are different modes.
+          In practice, for UDP TS they are the <b>same FFmpeg output</b> — the only difference is whether the
+          destination is a normal host IP (unicast)
+          or a multicast group (239.x/232.x etc).
+        </p>
+
+        <div class="ipx-kv">
+          <div>
+            <b>UDP TS Unicast</b>
+            <p class="ipx-small">Send to a single receiver (or to a UDP proxy/relay).</p>
+            <pre class="ipx-pre">udp://10.120.0.111:5000?pkt_size=1316</pre>
+          </div>
+          <div>
+            <b>UDP TS Multicast</b>
+            <p class="ipx-small">Send to many receivers on the same VLAN/subnet (via IGMP).</p>
+            <pre class="ipx-pre">udp://239.0.0.1:5000?pkt_size=1316&amp;ttl=16</pre>
+          </div>
+        </div>
+
+        <details class="ipx-details">
+          <summary>Common URL options you may use</summary>
+          <ul>
+            <li><code class="ipx-code">pkt_size=1316</code> — MPEG-TS friendly packet size (reduces fragmentation).</li>
+            <li><code class="ipx-code">ttl=16</code> — multicast hop limit (usually 1 is fine if same subnet; increase
+              only if routed).
+            </li>
+            <li><code class="ipx-code">localaddr=10.120.0.80</code> — force the sender/receiver interface (very useful
+              on Windows with multiple NICs/VPN/VirtualBox adapters).
+            </li>
+            <li><code class="ipx-code">reuse=1</code> — allow multiple listeners on same host/port (depends on
+              OS/player).
+            </li>
+          </ul>
+        </details>
+
+        <details class="ipx-details">
+          <summary>Quick test commands (customer-friendly)</summary>
+          <p><b>Windows VLC:</b></p>
+          <pre class="ipx-pre">udp://@239.0.0.1:5000</pre>
+
+          <p><b>Windows ffplay (if multiple NICs, add localaddr):</b></p>
+          <pre class="ipx-pre">ffplay.exe -fflags nobuffer -flags low_delay -probesize 32 -analyzeduration 0 "udp://@239.0.0.1:5000?localaddr=10.120.0.120"</pre>
+
+          <p><b>Linux:</b></p>
+          <pre class="ipx-pre">ffplay udp://@239.0.0.1:5000
+vlc udp://@239.0.0.1:5000</pre>
+        </details>
+
+        <details class="ipx-details">
+          <summary>Multicast troubleshooting checklist (when unicast works but multicast doesn’t)</summary>
+          <ul>
+            <li><b>Windows has more than one active interface:</b> VPN, VirtualBox, Hyper-V, etc. Disable the unused
+              adapter or force <code class="ipx-code">localaddr=…</code>.
+            </li>
+            <li><b>Switch/Network:</b> IGMP snooping can block delivery if no IGMP join is seen. Test on a simple
+              unmanaged switch or with snooping disabled (temporarily).
+            </li>
+            <li><b>Same subnet:</b> if sender and receiver are on different VLANs, multicast routing must exist
+              (PIM/IGMP proxy).
+            </li>
+            <li><b>Firewall:</b> allow inbound UDP on the chosen port (5000 in this example).</li>
+            <li><b>Player buffering:</b> if you see “non-existing PPS referenced” initially, wait a few seconds — or
+              ensure the sender repeats SPS/PPS (repeat-headers).
+            </li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="ipx-card">
+        <h2>Project capabilities</h2>
+        <ul>
+          <li><b>Recording:</b> uses schedules to save TS segments to disk for each channel.</li>
+          <li><b>Time-shift playback:</b> outputs a delayed UDP stream based on channel recordings + delay setting.</li>
+          <li><b>Live re-stream:</b> can pass-through or transcode inputs to an output (UDP/HLS/RTMP/File depending on
+            your project setup).
+          </li>
+          <li><b>Archive playback (future-friendly):</b> recorded files can be reused for manual replay or later VOD/HLS
+            features.
+          </li>
+        </ul>
+
+        <details class="ipx-details">
+          <summary>Recommended “customer demo” setup</summary>
+          <ul>
+            <li>Enable a test channel (Internal Generator) → output to <code class="ipx-code">udp://239.0.0.1:5000?pkt_size=1316&amp;ttl=16</code>
+            </li>
+            <li>On the customer PC: VLC “Open Network Stream” → <code class="ipx-code">udp://@239.0.0.1:5000</code></li>
+            <li>If the PC has multiple adapters: disable the extra adapter or add <code class="ipx-code">?localaddr=PC_IP</code>
+            </li>
+          </ul>
+        </details>
+
+        <details class="ipx-details">
+          <summary>Port and addressing notes</summary>
+          <ul>
+            <li><b>Unicast:</b> use a host IP in your subnet (example: <code class="ipx-code">10.120.0.111:5000</code>).
+            </li>
+            <li><b>Multicast:</b> use a group IP (commonly <code class="ipx-code">239.0.0.0/8</code>) and a UDP port
+              (example: 5000–65000).
+            </li>
+            <li>Keep multicast groups unique per channel (avoid port/IP collisions).</li>
+          </ul>
+        </details>
+      </div>
+
+    </div>
+
+    <div class="ipx-card ipx-results" style="margin-top:14px;">
+      <h2>Channels and last known results</h2>
+      <p class="ipx-muted">
+        This table reflects what is configured in the database. “Enabled” controls whether the channel is eligible to
+        run.
+        (If you have an enforcer/runner, it will use this configuration.)
+      </p>
+
+      <table class="ipx-table">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Enabled</th>
+          <th>Input</th>
+          <th>Output</th>
+          <th>Schedule</th>
+          <th>Last Run</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for channel in channels %}
+          <tr>
+            <td>
+              <b>{{ channel.name }}</b>
+              <div class="ipx-small">ID: {{ channel.id }}</div>
+            </td>
+            <td>
+              {% if channel.enabled %}
+                <span class="ipx-status-ok">Yes</span>
+              {% else %}
+                <span class="ipx-status-bad">No</span>
+              {% endif %}
+            </td>
+            <td>
+              <div><b class="ipx-small">Type:</b> {{ channel.input_type }}</div>
+              <div><b class="ipx-small">URL:</b> <code class="ipx-code">{{ channel.input_url }}</code></div>
+            </td>
+            <td>
+              <div><b class="ipx-small">Type:</b> {{ channel.output_type }}</div>
+              <div><b class="ipx-small">Target:</b> <code class="ipx-code">{{ channel.output_target }}</code></div>
+            </td>
+            <td>
+              {% if channel.schedule %}
+                <div class="ipx-small">{{ channel.schedule }}</div>
+              {% else %}
+                <span class="ipx-small">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if channel.last_run_at %}
+                <div>{{ channel.last_run_at }}</div>
+                <div class="ipx-small">duration: {{ channel.last_run_seconds|default:"—" }}</div>
+              {% else %}
+                <span class="ipx-small">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if channel.last_run_status == "OK" %}
+                <span class="ipx-status-ok">OK</span>
+              {% elif channel.last_run_status == "WARN" %}
+                <span class="ipx-status-warn">WARN</span>
+              {% elif channel.last_run_status %}
+                <span class="ipx-status-bad">{{ channel.last_run_status }}</span>
+              {% else %}
+                <span class="ipx-small">—</span>
+              {% endif %}
+              {% if channel.last_run_message %}
+                <div class="ipx-small">{{ channel.last_run_message }}</div>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="ipx-muted">No channels found.</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+{% endblock %}

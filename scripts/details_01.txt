@@ -1,0 +1,138 @@
+
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ ps aux | grep ffmpeg | grep -v grep
+rio       145133  5.6  0.0      0     0 ?        Z    14:04   9:38 [ffmpeg] <defunct>
+rio       145135  5.6  0.0      0     0 ?        Z    14:04   9:38 [ffmpeg] <defunct>
+rio       148513  0.4  0.0      0     0 ?        Z    14:07   0:48 [ffmpeg] <defunct>
+rio       149207  3.6  0.0      0     0 ?        Z    14:08   6:02 [ffmpeg] <defunct>
+rio       266402 61.4  0.2 2853864 96284 ?       SLl  16:50   2:18 ffmpeg -y -hide_banner -loglevel warning -re -f lavfi -i testsrc2=size=1280x720:rate=25 -f lavfi -i sine=frequency=1000:sample_rate=48000 -shortest -map 0:v:0 -map 1:a:0 -c:v libx264 -preset veryfast -tune zerolatency -pix_fmt yuv420p -g 50 -x264-params repeat-headers=1 -c:a aac -b:a 128k -ac 2 -f mpegts -mpegts_flags +resend_headers -muxdelay 0 -muxpreload 0 udp://127.0.0.1:5002?overrun_nonfatal=1&pkt_size=1316
+rio       266949 58.5  0.3 2853864 98324 ?       SLl  16:51   1:49 ffmpeg -y -hide_banner -loglevel warning -re -f lavfi -i testsrc2=size=1280x720:rate=25 -f lavfi -i sine=frequency=1000:sample_rate=48000 -shortest -map 0:v:0 -map 1:a:0 -c:v libx264 -preset veryfast -tune zerolatency -pix_fmt yuv420p -g 50 -x264-params repeat-headers=1 -c:a aac -b:a 128k -ac 2 -f mpegts -mpegts_flags +resend_headers -muxdelay 0 -muxpreload 0 udp://127.0.0.1:5002
+
+
+
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ pgrep -a ffmpeg
+145133 [ffmpeg] <defunct>
+145135 [ffmpeg] <defunct>
+148513 [ffmpeg] <defunct>
+149207 [ffmpeg] <defunct>
+266402 ffmpeg -y -hide_banner -loglevel warning -re -f lavfi -i testsrc2=size=1280x720:rate=25 -f lavfi -i sine=frequency=1000:sample_rate=48000 -shortest -map 0:v:0 -map 1:a:0 -c:v libx264 -preset veryfast -tune zerolatency -pix_fmt yuv420p -g 50 -x264-params repeat-headers=1 -c:a aac -b:a 128k -ac 2 -f mpegts -mpegts_flags +resend_headers -muxdelay 0 -muxpreload 0 udp://127.0.0.1:5002?overrun_nonfatal=1&pkt_size=1316
+266949 ffmpeg -y -hide_banner -loglevel warning -re -f lavfi -i testsrc2=size=1280x720:rate=25 -f lavfi -i sine=frequency=1000:sample_rate=48000 -shortest -map 0:v:0 -map 1:a:0 -c:v libx264 -preset veryfast -tune zerolatency -pix_fmt yuv420p -g 50 -x264-params repeat-headers=1 -c:a aac -b:a 128k -ac 2 -f mpegts -mpegts_flags +resend_headers -muxdelay 0 -muxpreload 0 udp://127.0.0.1:5002
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 266402
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 266949
+
+--------------------------------------------------------------------------------------
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ pgrep -a ffmpeg
+145133 [ffmpeg] <defunct>
+145135 [ffmpeg] <defunct>
+148513 [ffmpeg] <defunct>
+149207 [ffmpeg] <defunct>
+283421 ffmpeg -y -hide_banner -loglevel warning -re -f lavfi -i testsrc2=size=1280x720:rate=25 -f lavfi -i sine=frequency=1000:sample_rate=48000 -shortest -map 0:v:0 -map 1:a:0 -c:v libx264 -preset veryfast -tune zerolatency -pix_fmt yuv420p -g 50 -x264-params repeat-headers=1 -c:a aac -b:a 128k -ac 2 -f mpegts -mpegts_flags +resend_headers -muxdelay 0 -muxpreload 0 udp://127.0.0.1:5002
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ pgrep -a ffmpeg
+145133 [ffmpeg] <defunct>
+145135 [ffmpeg] <defunct>
+148513 [ffmpeg] <defunct>
+149207 [ffmpeg] <defunct>
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ pgrep -a ffmpeg
+145133 [ffmpeg] <defunct>
+145135 [ffmpeg] <defunct>
+148513 [ffmpeg] <defunct>
+149207 [ffmpeg] <defunct>
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 
+kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 145133
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 145135
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 148513
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 149207
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ pgrep -a ffmpeg
+145133 [ffmpeg] <defunct>
+145135 [ffmpeg] <defunct>
+148513 [ffmpeg] <defunct>
+149207 [ffmpeg] <defunct>
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ ps -o pid,ppid,stat,cmd -p 145133,145135,148513,149207
+    PID    PPID STAT CMD
+ 145133  139976 Z    [ffmpeg] <defunct>
+ 145135  139976 Z    [ffmpeg] <defunct>
+ 148513  139976 Z    [ffmpeg] <defunct>
+ 149207  139976 Z    [ffmpeg] <defunct>
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ ps -p 139976 -o pid,ppid,cmd
+    PID    PPID CMD
+ 139976       1 /home/rio/prjs/ip_transcoder-v2-phase2/.venv/bin/python /home/rio/prjs/ip_transcoder-v2-phase2/manage.py transcoder_enforcer
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ ps -p 145135 -o pid,ppid,cmd
+    PID    PPID CMD
+ 145135  139976 [ffmpeg] <defunct>
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ kill -TERM 139976
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ ps -p 139976 -o pid,ppid,cmd
+    PID    PPID CMD
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ pgrep -a ffmpeg
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ 
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+
+
+

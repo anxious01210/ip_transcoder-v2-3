@@ -1,0 +1,118 @@
+.
+├── db.sqlite3
+├── Documents
+│   └── details_01.txt
+├── from_udp.ts
+├── iptranscoder
+│   ├── asgi.py
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── asgi.cpython-311.pyc
+│   │   ├── __init__.cpython-311.pyc
+│   │   ├── __init__.cpython-314.pyc
+│   │   ├── settings.cpython-311.pyc
+│   │   ├── settings.cpython-314.pyc
+│   │   ├── urls.cpython-311.pyc
+│   │   ├── urls.cpython-314.pyc
+│   │   ├── wsgi.cpython-311.pyc
+│   │   └── wsgi.cpython-314.pyc
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── manage.py
+├── media
+│   ├── ffmpeg_logs
+│   ├── recordings
+│   │   └── multicast test stream
+│   │       └── 20251212
+│   │           ├── multicast test stream_20251212-145042.ts
+│   │           ├── multicast test stream_20251212-145148.ts
+│   │           ├── multicast test stream_20251212-145248.ts
+│   │           ├── multicast test stream_20251212-145348.ts
+│   │           └── multicast test stream_20251212-145448.ts
+│   └── tmp_playlists
+├── project_tree.txt
+├── __pycache__
+│   └── manage.cpython-311.pyc
+├── requirements.txt
+├── scripts
+│   ├── django_full_stack_setup.sh
+│   ├── django_setup_no-gunicornNenforcer.sh
+│   ├── enforcer_service.sh
+│   └── install_enforcer_service.sh
+├── templates
+│   └── admin
+│       └── transcoder
+│           ├── channel
+│           │   └── change_list.html
+│           ├── overview.html
+│           └── overview_old.html
+└── transcoder
+    ├── admin.py
+    ├── admin_views.py
+    ├── apps.py
+    ├── ffmpeg_runner.py
+    ├── __init__.py
+    ├── management
+    │   ├── commands
+    │   │   ├── deploy_production.py
+    │   │   ├── __init__.py
+    │   │   ├── __pycache__
+    │   │   │   ├── __init__.cpython-311.pyc
+    │   │   │   ├── __init__.cpython-314.pyc
+    │   │   │   ├── run_channel_ffmpeg.cpython-311.pyc
+    │   │   │   ├── run_channel_ffmpeg.cpython-314.pyc
+    │   │   │   ├── show_ffmpeg_cmd.cpython-311.pyc
+    │   │   │   ├── show_ffmpeg_cmd.cpython-314.pyc
+    │   │   │   ├── transcoder_enforcer.cpython-311.pyc
+    │   │   │   └── transcoder_enforcer.cpython-314.pyc
+    │   │   ├── run_channel_ffmpeg.py
+    │   │   ├── show_ffmpeg_cmd.py
+    │   │   └── transcoder_enforcer.py
+    │   ├── __init__.py
+    │   └── __pycache__
+    │       ├── __init__.cpython-311.pyc
+    │       └── __init__.cpython-314.pyc
+    ├── migrations
+    │   ├── 0001_initial.py
+    │   ├── 0002_channel_playback_tail_enabled.py
+    │   ├── 0003_alter_channel_options_remove_channel_delay_seconds_and_more.py
+    │   ├── __init__.py
+    │   └── __pycache__
+    │       ├── 0001_initial.cpython-314.pyc
+    │       ├── 0002_alter_channel_recording_path_template_schedule.cpython-311.pyc
+    │       ├── 0002_channel_playback_tail_enabled.cpython-314.pyc
+    │       ├── 0003_alter_channel_options_remove_channel_delay_seconds_and_more.cpython-314.pyc
+    │       ├── 0003_recurringschedule_timeshiftprofile.cpython-311.pyc
+    │       ├── 0004_alter_recurringschedule_created_at_and_more.cpython-311.pyc
+    │       ├── 0005_alter_channel_created_at_and_more.cpython-311.pyc
+    │       ├── 0006_alter_recurringschedule_end_time_and_more.cpython-311.pyc
+    │       ├── 0007_alter_recurringschedule_purpose_and_more.cpython-311.pyc
+    │       ├── __init__.cpython-311.pyc
+    │       └── __init__.cpython-314.pyc
+    ├── models.py
+    ├── __pycache__
+    │   ├── admin.cpython-311.pyc
+    │   ├── admin.cpython-314.pyc
+    │   ├── admin_views.cpython-311.pyc
+    │   ├── admin_views.cpython-314.pyc
+    │   ├── apps.cpython-311.pyc
+    │   ├── apps.cpython-314.pyc
+    │   ├── ffmpeg_runner.cpython-311.pyc
+    │   ├── ffmpeg_runner.cpython-314.pyc
+    │   ├── __init__.cpython-311.pyc
+    │   ├── __init__.cpython-314.pyc
+    │   ├── models.cpython-311.pyc
+    │   ├── models.cpython-314.pyc
+    │   ├── tests.cpython-311.pyc
+    │   └── views.cpython-311.pyc
+    ├── retention.py
+    ├── templatetags
+    │   ├── __pycache__
+    │   │   ├── transcoder_extras.cpython-311.pyc
+    │   │   └── transcoder_extras.cpython-314.pyc
+    │   └── transcoder_extras.py
+    ├── tests.py
+    └── views.py
+
+26 directories, 90 files

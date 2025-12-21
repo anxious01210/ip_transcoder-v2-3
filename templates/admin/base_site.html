@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+
+{% block branding %}
+  <div id="site-branding">
+    <h1 id="site-name">
+      <a href="{% url 'admin:index' %}">IP TransCoder</a>
+    </h1>
+
+    <a style="padding-top: 6px;" href="{% url 'transcoder_overview' %}" class="brand-link">
+      📡 Transcoder Overview
+    </a>
+  </div>
+{% endblock %}
+
+
+{% block usertools %}
+  {{ block.super }}
+{% endblock %}
+

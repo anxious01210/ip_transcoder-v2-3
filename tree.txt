@@ -1,0 +1,261 @@
+.
+├── core
+│   ├── admin.py
+│   ├── apps.py
+│   ├── __init__.py
+│   ├── migrations
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       └── __init__.cpython-314.pyc
+│   ├── models.py
+│   ├── __pycache__
+│   │   ├── admin.cpython-314.pyc
+│   │   ├── apps.cpython-314.pyc
+│   │   ├── __init__.cpython-314.pyc
+│   │   ├── models.cpython-314.pyc
+│   │   ├── urls.cpython-314.pyc
+│   │   └── views.cpython-314.pyc
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── db.sqlite3
+├── Documents
+│   └── details_01.txt
+├── from_udp.ts
+├── iptranscoder
+│   ├── asgi.py
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-314.pyc
+│   │   ├── settings.cpython-314.pyc
+│   │   ├── urls.cpython-314.pyc
+│   │   └── wsgi.cpython-314.pyc
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── manage.py
+├── media
+│   ├── Last Samurai Standing - S01E01.mkv
+│   └── logs
+│       └── ffmpeg
+│           ├── ffmpeg_ch3_playback_t5.log
+│           └── ffmpeg_ch3_playback_t6.log
+├── project_tree.txt
+├── requirements.txt
+├── scripts
+│   ├── details_01.txt
+│   ├── django_deploy_wizard_v4_1.sh
+│   ├── enforcer_service.sh
+│   ├── old_ones
+│   │   ├── django_deploy_wizard.sh
+│   │   ├── django_full_stack_setup.sh
+│   │   ├── django_setup_no-gunicornNenforcer.sh
+│   │   └── install_enforcer_service.sh
+│   └── Script running details.txt
+├── staticfiles
+│   └── admin
+│       ├── css
+│       │   ├── autocomplete.css
+│       │   ├── base.css
+│       │   ├── changelists.css
+│       │   ├── dark_mode.css
+│       │   ├── dashboard.css
+│       │   ├── forms.css
+│       │   ├── login.css
+│       │   ├── nav_sidebar.css
+│       │   ├── responsive.css
+│       │   ├── responsive_rtl.css
+│       │   ├── rtl.css
+│       │   ├── unusable_password_field.css
+│       │   ├── vendor
+│       │   │   └── select2
+│       │   │       ├── LICENSE-SELECT2.md
+│       │   │       ├── select2.css
+│       │   │       └── select2.min.css
+│       │   └── widgets.css
+│       ├── img
+│       │   ├── calendar-icons.svg
+│       │   ├── icon-addlink.svg
+│       │   ├── icon-alert-dark.svg
+│       │   ├── icon-alert.svg
+│       │   ├── icon-calendar.svg
+│       │   ├── icon-changelink.svg
+│       │   ├── icon-clock.svg
+│       │   ├── icon-debug-dark.svg
+│       │   ├── icon-debug.svg
+│       │   ├── icon-deletelink.svg
+│       │   ├── icon-hidelink.svg
+│       │   ├── icon-info-dark.svg
+│       │   ├── icon-info.svg
+│       │   ├── icon-no-dark.svg
+│       │   ├── icon-no.svg
+│       │   ├── icon-unknown-alt.svg
+│       │   ├── icon-unknown.svg
+│       │   ├── icon-viewlink.svg
+│       │   ├── icon-yes-dark.svg
+│       │   ├── icon-yes.svg
+│       │   ├── inline-delete.svg
+│       │   ├── README.md
+│       │   ├── search.svg
+│       │   ├── selector-icons.svg
+│       │   ├── sorting-icons.svg
+│       │   ├── tooltag-add.svg
+│       │   └── tooltag-arrowright.svg
+│       └── js
+│           ├── actions.js
+│           ├── admin
+│           │   ├── DateTimeShortcuts.js
+│           │   └── RelatedObjectLookups.js
+│           ├── autocomplete.js
+│           ├── calendar.js
+│           ├── cancel.js
+│           ├── change_form.js
+│           ├── core.js
+│           ├── filters.js
+│           ├── inlines.js
+│           ├── jquery.init.js
+│           ├── nav_sidebar.js
+│           ├── popup_response.js
+│           ├── prepopulate_init.js
+│           ├── prepopulate.js
+│           ├── SelectBox.js
+│           ├── SelectFilter2.js
+│           ├── theme.js
+│           ├── urlify.js
+│           └── vendor
+│               ├── jquery
+│               │   ├── jquery.js
+│               │   ├── jquery.min.js
+│               │   └── LICENSE.txt
+│               ├── select2
+│               │   ├── i18n
+│               │   │   ├── af.js
+│               │   │   ├── ar.js
+│               │   │   ├── az.js
+│               │   │   ├── bg.js
+│               │   │   ├── bn.js
+│               │   │   ├── bs.js
+│               │   │   ├── ca.js
+│               │   │   ├── cs.js
+│               │   │   ├── da.js
+│               │   │   ├── de.js
+│               │   │   ├── dsb.js
+│               │   │   ├── el.js
+│               │   │   ├── en.js
+│               │   │   ├── es.js
+│               │   │   ├── et.js
+│               │   │   ├── eu.js
+│               │   │   ├── fa.js
+│               │   │   ├── fi.js
+│               │   │   ├── fr.js
+│               │   │   ├── gl.js
+│               │   │   ├── he.js
+│               │   │   ├── hi.js
+│               │   │   ├── hr.js
+│               │   │   ├── hsb.js
+│               │   │   ├── hu.js
+│               │   │   ├── hy.js
+│               │   │   ├── id.js
+│               │   │   ├── is.js
+│               │   │   ├── it.js
+│               │   │   ├── ja.js
+│               │   │   ├── ka.js
+│               │   │   ├── km.js
+│               │   │   ├── ko.js
+│               │   │   ├── lt.js
+│               │   │   ├── lv.js
+│               │   │   ├── mk.js
+│               │   │   ├── ms.js
+│               │   │   ├── nb.js
+│               │   │   ├── ne.js
+│               │   │   ├── nl.js
+│               │   │   ├── pl.js
+│               │   │   ├── ps.js
+│               │   │   ├── pt-BR.js
+│               │   │   ├── pt.js
+│               │   │   ├── ro.js
+│               │   │   ├── ru.js
+│               │   │   ├── sk.js
+│               │   │   ├── sl.js
+│               │   │   ├── sq.js
+│               │   │   ├── sr-Cyrl.js
+│               │   │   ├── sr.js
+│               │   │   ├── sv.js
+│               │   │   ├── th.js
+│               │   │   ├── tk.js
+│               │   │   ├── tr.js
+│               │   │   ├── uk.js
+│               │   │   ├── vi.js
+│               │   │   ├── zh-CN.js
+│               │   │   └── zh-TW.js
+│               │   ├── LICENSE.md
+│               │   ├── select2.full.js
+│               │   └── select2.full.min.js
+│               └── xregexp
+│                   ├── LICENSE.txt
+│                   ├── xregexp.js
+│                   └── xregexp.min.js
+├── templates
+│   ├── admin
+│   │   ├── base_site.html
+│   │   └── transcoder
+│   │       ├── channel
+│   │       │   └── change_list.html
+│   │       └── overview.html
+│   └── core
+│       └── home.html
+├── transcoder
+│   ├── admin.py
+│   ├── admin_views.py
+│   ├── apps.py
+│   ├── ffmpeg_runner.py
+│   ├── __init__.py
+│   ├── management
+│   │   ├── commands
+│   │   │   ├── deploy_production.py
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-314.pyc
+│   │   │   │   ├── run_channel_ffmpeg.cpython-314.pyc
+│   │   │   │   ├── show_ffmpeg_cmd.cpython-314.pyc
+│   │   │   │   └── transcoder_enforcer.cpython-314.pyc
+│   │   │   ├── run_channel_ffmpeg.py
+│   │   │   ├── show_ffmpeg_cmd.py
+│   │   │   └── transcoder_enforcer.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       └── __init__.cpython-314.pyc
+│   ├── migrations
+│   │   ├── 0001_initial.py
+│   │   ├── 0002_remove_channel_audio_codec_remove_channel_audio_mode_and_more.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── 0001_initial.cpython-314.pyc
+│   │       ├── 0002_remove_channel_audio_codec_remove_channel_audio_mode_and_more.cpython-314.pyc
+│   │       └── __init__.cpython-314.pyc
+│   ├── models.py
+│   ├── __pycache__
+│   │   ├── admin.cpython-314.pyc
+│   │   ├── admin_views.cpython-314.pyc
+│   │   ├── apps.cpython-314.pyc
+│   │   ├── ffmpeg_runner.cpython-314.pyc
+│   │   ├── __init__.cpython-314.pyc
+│   │   └── models.cpython-314.pyc
+│   ├── retention.py
+│   ├── streaming
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-314.pyc
+│   │   │   └── url_utils.cpython-314.pyc
+│   │   └── url_utils.py
+│   ├── templatetags
+│   │   ├── __pycache__
+│   │   │   └── transcoder_extras.cpython-314.pyc
+│   │   └── transcoder_extras.py
+│   ├── tests.py
+│   └── views.py
+├── tree.txt
+└── Tshoots
+    └── Tshoot_01.txt
+
+44 directories, 215 files

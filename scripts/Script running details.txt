@@ -1,0 +1,84 @@
+
+Set/confirm the DB password manually:
+sudo -u postgres psql -c "ALTER USER ip_transcoder_v2_user WITH PASSWORD 'Diagonal1!DB';"
+
+Verify you can connect (this is the real test):
+psql "host=127.0.0.1 port=5432 dbname=ip_transcoder_v2_db user=ip_transcoder_v2_user password=Diagonal1!DB" -c "SELECT 1;"
+
+-------------------------------------------------------------------------------------------------
+
+✅ What YOU should choose now
+Based on everything you said:
+Fresh server
+Testing / internal usage
+Gunicorn already bound to 0.0.0.0:8001
+No DNS yet
+✔️ Best choice right now
+👉 Enter your server’s IP address
+(or your real server IP)
+Why this is correct
+Lets you open Django Admin from another PC
+Avoids DNS complexity
+Works immediately
+You can later add a domain without reinstalling
+so I did as below and used the real server IP address:
+
+✅ nginx installed
+Nginx site name [ip_transcoder-v2]: 
+Server name (domain or IP) [_]: 10.120.0.80
+
+-------------------------------------------------------------------------------------------------
+to restart the services & website:
+sudo systemctl restart ip_transcoder_enforcer.service
+sudo systemctl restart ip_transcoder_gunicorn.service
+sudo systemctl reload nginx
+
+--------------
+sudo systemctl daemon-reload
+sudo systemctl restart ip_transcoder_gunicorn.service
+sudo systemctl restart ip_transcoder_enforcer.service
+sudo systemctl reload nginx
+
+
+-------------------------------------------------------------------------------------------------
+To restart the Gunicorn server:
+# 1) See who is listening on 8001
+sudo ss -ltnp | grep ':8001' || true
+
+# 2) Stop BOTH gunicorn services (important)
+sudo systemctl stop ip_transcoder-v2_gunicorn.service
+sudo systemctl stop ip_transcoder_gunicorn.service
+
+# 3) Check again - if something still listens on 8001, kill it
+sudo ss -ltnp | grep ':8001' || true
+# If you still see a PID like pid=XXXXX, kill it:
+# sudo kill -9 XXXXX
+
+# 4) Disable the OLD service so it never comes back (keep only v2)
+sudo systemctl disable --now ip_transcoder_gunicorn.service
+
+# 5) Reload systemd (because you edited unit files)
+sudo systemctl daemon-reload
+
+# 6) Start ONLY v2
+sudo systemctl start ip_transcoder-v2_gunicorn.service
+sudo systemctl status ip_transcoder-v2_gunicorn.service -l --no-pager
+
+
+Now confirm the Host header is accepted (this should NOT return 400 anymore):
+curl -I -H "Host: 10.120.0.80" http://127.0.0.1:8001/admin/login/
+Expected: 302 or 200, not 400.
+-------------------------------------------------------------------------------------------------
+to test for multicast target on another PC (localaddr=10.120.0.120)
+ffplay.exe -loglevel verbose -fflags nobuffer -flags low_delay -probesize 500000 -analyzeduration 1000000 "udp://@239.0.0.1:5000?localaddr=10.120.0.120&overrun_nonfatal=1&fifo_size=5000000"
+
+-------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+

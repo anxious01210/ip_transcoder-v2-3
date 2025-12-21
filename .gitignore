@@ -1,0 +1,14 @@
+# IDE/Tooling Files
+.idea/
+
+# Virtual Environment
+.venv/
+
+# Django Media Files (User Uploads)
+/media/
+# Exception: keep this specific subdirectory, often used for test fixtures
+!/media/test_media/
+
+# Compiled Python files and other standard ignores
+*.pyc
+__pycache__/

@@ -1,0 +1,378 @@
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ 
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ ffprobe -hide_banner -i "media/Last Samurai Standing - S01E01.mkv"
+Input #0, matroska,webm, from 'media/Last Samurai Standing - S01E01.mkv':
+  Metadata:
+    encoder         : libebml v1.4.5 + libmatroska v1.7.1
+    creation_time   : 2025-11-15T19:09:17.000000Z
+  Duration: 00:58:52.74, start: 0.000000, bitrate: 4650 kb/s
+  Stream #0:0: Video: hevc (Main 10), yuv420p10le(tv), 1920x960, SAR 1:1 DAR 2:1, 24 fps, 24 tbr, 1k tbn (default)
+    Metadata:
+      BPS             : 4006580
+      DURATION        : 00:58:52.459000000
+      NUMBER_OF_FRAMES: 84779
+      NUMBER_OF_BYTES : 1769135154
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:1(jpn): Audio: eac3, 48000 Hz, 5.1(side), fltp, 640 kb/s
+    Metadata:
+      BPS             : 640000
+      DURATION        : 00:58:52.736000000
+      NUMBER_OF_FRAMES: 110398
+      NUMBER_OF_BYTES : 282618880
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:2(eng): Subtitle: subrip (forced)
+    Metadata:
+      title           : Forced
+      BPS             : 1
+      DURATION        : 00:46:45.375000000
+      NUMBER_OF_FRAMES: 19
+      NUMBER_OF_BYTES : 639
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:3(eng): Subtitle: subrip
+    Metadata:
+      BPS             : 26
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 444
+      NUMBER_OF_BYTES : 11231
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:4(eng): Subtitle: subrip (hearing impaired)
+    Metadata:
+      title           : SDH
+      BPS             : 45
+      DURATION        : 00:56:25.375000000
+      NUMBER_OF_FRAMES: 705
+      NUMBER_OF_BYTES : 19088
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:5(ara): Subtitle: subrip
+    Metadata:
+      BPS             : 48
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 445
+      NUMBER_OF_BYTES : 20336
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:6(cat): Subtitle: subrip
+    Metadata:
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 445
+      NUMBER_OF_BYTES : 10731
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:7(cze): Subtitle: subrip
+    Metadata:
+      BPS             : 27
+      DURATION        : 00:56:27.584000000
+      NUMBER_OF_FRAMES: 407
+      NUMBER_OF_BYTES : 11650
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:8(dan): Subtitle: subrip
+    Metadata:
+      BPS             : 24
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 427
+      NUMBER_OF_BYTES : 10564
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:9(ger): Subtitle: subrip
+    Metadata:
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 436
+      NUMBER_OF_BYTES : 10595
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:10(gre): Subtitle: subrip
+    Metadata:
+      BPS             : 45
+      DURATION        : 00:56:27.750000000
+      NUMBER_OF_FRAMES: 427
+      NUMBER_OF_BYTES : 19364
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:11(spa): Subtitle: subrip
+    Metadata:
+      title           : Latin American
+      BPS             : 25
+      DURATION        : 00:56:27.584000000
+      NUMBER_OF_FRAMES: 441
+      NUMBER_OF_BYTES : 10719
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:12(spa): Subtitle: subrip
+    Metadata:
+      title           : Castilian
+      BPS             : 27
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 441
+      NUMBER_OF_BYTES : 11701
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:13(baq): Subtitle: subrip
+    Metadata:
+      BPS             : 23
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 438
+      NUMBER_OF_BYTES : 10058
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:14(fin): Subtitle: subrip
+    Metadata:
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 375
+      NUMBER_OF_BYTES : 10700
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:15(fil): Subtitle: subrip
+    Metadata:
+      BPS             : 29
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 445
+      NUMBER_OF_BYTES : 12289
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:16(fre): Subtitle: subrip
+    Metadata:
+      title           : Parisian
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 407
+      NUMBER_OF_BYTES : 10783
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:17(glg): Subtitle: subrip
+    Metadata:
+      BPS             : 26
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 442
+      NUMBER_OF_BYTES : 11220
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:18(heb): Subtitle: subrip
+    Metadata:
+      title           : Apartheid State
+      BPS             : 45
+      DURATION        : 00:52:12.417000000
+      NUMBER_OF_FRAMES: 431
+      NUMBER_OF_BYTES : 17627
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:19(hrv): Subtitle: subrip
+    Metadata:
+      BPS             : 23
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 442
+      NUMBER_OF_BYTES : 10027
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:20(hun): Subtitle: subrip
+    Metadata:
+      BPS             : 26
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 444
+      NUMBER_OF_BYTES : 11401
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:21(ind): Subtitle: subrip
+    Metadata:
+      BPS             : 27
+      DURATION        : 00:56:26.417000000
+      NUMBER_OF_FRAMES: 467
+      NUMBER_OF_BYTES : 11617
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:22(ita): Subtitle: subrip
+    Metadata:
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 442
+      NUMBER_OF_BYTES : 10704
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:23(jpn): Subtitle: subrip
+    Metadata:
+      BPS             : 34
+      DURATION        : 00:51:20.792000000
+      NUMBER_OF_FRAMES: 473
+      NUMBER_OF_BYTES : 13425
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:24(kor): Subtitle: subrip
+    Metadata:
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 457
+      NUMBER_OF_BYTES : 10919
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:25(may): Subtitle: subrip
+    Metadata:
+      BPS             : 24
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 439
+      NUMBER_OF_BYTES : 10333
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:26(nob): Subtitle: subrip
+    Metadata:
+      BPS             : 24
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 421
+      NUMBER_OF_BYTES : 10547
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:27(dut): Subtitle: subrip
+    Metadata:
+      BPS             : 24
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 394
+      NUMBER_OF_BYTES : 10258
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:28(pol): Subtitle: subrip
+    Metadata:
+      BPS             : 24
+      DURATION        : 00:56:28.584000000
+      NUMBER_OF_FRAMES: 448
+      NUMBER_OF_BYTES : 10469
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:29(por): Subtitle: subrip
+    Metadata:
+      title           : Brazilian
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 435
+      NUMBER_OF_BYTES : 10951
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:30(por): Subtitle: subrip
+    Metadata:
+      title           : Iberian
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 449
+      NUMBER_OF_BYTES : 10693
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:31(rum): Subtitle: subrip
+    Metadata:
+      BPS             : 28
+      DURATION        : 00:56:27.584000000
+      NUMBER_OF_FRAMES: 404
+      NUMBER_OF_BYTES : 12014
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:32(rus): Subtitle: subrip
+    Metadata:
+      BPS             : 41
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 442
+      NUMBER_OF_BYTES : 17432
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:33(swe): Subtitle: subrip
+    Metadata:
+      BPS             : 25
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 414
+      NUMBER_OF_BYTES : 10798
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:34(tha): Subtitle: subrip
+    Metadata:
+      BPS             : 69
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 446
+      NUMBER_OF_BYTES : 29353
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:35(tur): Subtitle: subrip
+    Metadata:
+      BPS             : 24
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 439
+      NUMBER_OF_BYTES : 10454
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:36(ukr): Subtitle: subrip
+    Metadata:
+      BPS             : 41
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 436
+      NUMBER_OF_BYTES : 17500
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:37(vie): Subtitle: subrip
+    Metadata:
+      BPS             : 34
+      DURATION        : 00:52:12.125000000
+      NUMBER_OF_FRAMES: 441
+      NUMBER_OF_BYTES : 13662
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:38(chi): Subtitle: subrip
+    Metadata:
+      title           : Simplified
+      BPS             : 22
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 440
+      NUMBER_OF_BYTES : 9617
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+  Stream #0:39(chi): Subtitle: subrip
+    Metadata:
+      title           : Traditional
+      BPS             : 21
+      DURATION        : 00:56:27.667000000
+      NUMBER_OF_FRAMES: 474
+      NUMBER_OF_BYTES : 9090
+      _STATISTICS_WRITING_APP: mkvmerge v86.0 ('Winter') 64-bit
+      _STATISTICS_WRITING_DATE_UTC: 2025-11-15 19:09:17
+      _STATISTICS_TAGS: BPS DURATION NUMBER_OF_FRAMES NUMBER_OF_BYTES
+(.venv) rio@GP73:~/prjs/ip_transcoder-v2-3$ 

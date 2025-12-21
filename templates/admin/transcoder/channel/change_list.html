@@ -1,0 +1,41 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block object-tools %}
+  {{ block.super }}
+  <div style="margin-top: 10px;">
+    <form action="{% url 'admin:transcoder_channel_create_test' %}" method="post"
+          style="display:inline-block; margin-right: 6px;">
+      {% csrf_token %}
+      <button type="submit" class="button">Create test channel</button>
+    </form>
+
+    <form action="{% url 'admin:transcoder_channel_start_test' %}" method="post"
+          style="display:inline-block; margin-right: 6px;">
+      {% csrf_token %}
+      <button type="submit" class="button">Start test channel</button>
+    </form>
+
+    <form action="{% url 'admin:transcoder_channel_stop_test' %}" method="post"
+          style="display:inline-block; margin-right: 6px;">
+      {% csrf_token %}
+      <button type="submit" class="button">Stop test channel</button>
+    </form>
+
+    <form action="{% url 'admin:transcoder_channel_delete_test' %}" method="post"
+          style="display:inline-block; margin-right: 6px;">
+      {% csrf_token %}
+      <button type="submit" class="button">Delete test channel</button>
+    </form>
+
+
+    <p class="help" style="margin-top: 8px;">
+      Internal generator mode outputs to <strong>udp://127.0.0.1:5002</strong> by default
+      (override via <code>TEST_CHANNEL_OUTPUT_URL</code> in settings).
+      Open VLC on the server:
+      <strong>Media → Open Network Stream → udp://@127.0.0.1:5002</strong>.
+      This tests: admin config → DB → enforcer → ffmpeg record → disk → ffmpeg playback.
+    </p>
+  </div>
+{% endblock %}
