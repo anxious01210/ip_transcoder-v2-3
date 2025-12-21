@@ -45,35 +45,7 @@ class FFmpegJobConfig:
 
             is_internal_gen = (chan.input_type == InputType.INTERNAL_GENERATOR)
 
-            # Determine modes/codecs from OutputProfile only
-            vid_mode = profile.video_mode
-            vid_codec = (profile.video_codec or "libx264")
-            aud_mode = profile.audio_mode
-            aud_codec = (profile.audio_codec or "aac")
-
-            # Video
-            if (not is_internal_gen) and (vid_mode == VideoMode.COPY):
-                args += ["-c:v", "copy"]
-            else:
-                args += ["-c:v", vid_codec]
-                if is_internal_gen and vid_codec == "libx264":
-                    args += [
-                        "-preset", "veryfast",
-                        "-tune", "zerolatency",
-                        "-pix_fmt", "yuv420p",
-                        "-g", "50",
-                        "-x264-params", "repeat-headers=1",
-                    ]
-
-            # Audio
-            if (not is_internal_gen) and (aud_mode == AudioMode.COPY):
-                args += ["-c:a", "copy"]
-            elif aud_mode == AudioMode.DISABLE:
-                args += ["-an"]
-            else:
-                args += ["-c:a", aud_codec]
-                if is_internal_gen:
-                    args += ["-b:a", "128k", "-ac", "2"]
+            self._apply_av_modes(args, profile=profile, is_internal_gen=is_internal_gen)
 
             # Segment output (record to disk)
             self._build_record_output(args)
@@ -108,36 +80,7 @@ class FFmpegJobConfig:
                 args += self._build_live_input_args()
 
                 is_internal_gen = (chan.input_type == InputType.INTERNAL_GENERATOR)
-                vid_mode = profile.video_mode
-                aud_mode = profile.audio_mode
-
-                # IMPORTANT: internal generator MUST be encoded (cannot streamcopy)
-                if is_internal_gen or (vid_mode != VideoMode.COPY):
-                    # Encode video (use existing channel/profile codec or default libx264)
-                    vid_codec = (profile.video_codec or "libx264")
-                    args += ["-c:v", vid_codec]
-                    if is_internal_gen and vid_codec == "libx264":
-                        args += [
-                            "-preset", "veryfast",
-                            "-tune", "zerolatency",
-                            "-pix_fmt", "yuv420p",
-                            "-g", "50",
-                            "-x264-params", "repeat-headers=1",
-                        ]
-                else:
-                    args += ["-c:v", "copy"]
-
-                # Audio
-                if is_internal_gen:
-                    args += ["-c:a", "aac", "-b:a", "128k", "-ac", "2"]
-                else:
-                    if aud_mode == AudioMode.COPY:
-                        args += ["-c:a", "copy"]
-                    elif aud_mode == AudioMode.DISABLE:
-                        args += ["-an"]
-                    else:
-                        aud_codec = (profile.audio_codec or "aac")
-                        args += ["-c:a", aud_codec]
+                self._apply_av_modes(args, profile=profile, is_internal_gen=is_internal_gen)
 
                 args += [
                     "-f", "mpegts",
@@ -159,7 +102,14 @@ class FFmpegJobConfig:
 
                 "-c:v", "copy",
                 "-c:a", "copy",
+            ]
 
+            # Apply COPY/ENCODE modes here too (Phase 3 requirement)
+            # Internal generator cannot reach this branch (delay>0 uses recorded segments),
+            # so is_internal_gen=False is correct.
+            self._apply_av_modes(args, profile=profile, is_internal_gen=False)
+
+            args += [
                 "-f", "mpegts",
                 "-mpegts_flags", "+resend_headers",
                 "-muxdelay", "0",
@@ -216,6 +166,84 @@ class FFmpegJobConfig:
             return ["-i", input_url]
 
         return ["-i", raw_input_url]
+
+
+    # ------------------------
+    # A/V modes (COPY vs ENCODE)
+    # ------------------------
+    def _apply_av_modes(self, args: List[str], *, profile: OutputProfile, is_internal_gen: bool) -> None:
+        """
+        Apply video/audio COPY vs ENCODE based on OutputProfile.
+        Phase 3: ENCODE uses CPU libx264 + AAC (HW fallback comes later).
+        PC/TV stability goals:
+          - repeat headers in TS
+          - yuv420p
+          - zerolatency tune for live UDP
+        """
+        # ---- Video ----
+        vid_mode = getattr(profile, "video_mode", VideoMode.COPY)
+        vid_codec = (getattr(profile, "video_codec", "") or "libx264").strip()
+
+        # Internal generator MUST be encoded (no streamcopy possible)
+        if (not is_internal_gen) and (vid_mode == VideoMode.COPY):
+            args += ["-c:v", "copy"]
+        else:
+            args += ["-c:v", vid_codec]
+
+            # Filters (only meaningful when encoding)
+            vf_parts: List[str] = []
+            sw = getattr(profile, "scale_width", None)
+            sh = getattr(profile, "scale_height", None)
+            if sw and sh:
+                vf_parts.append(f"scale={int(sw)}:{int(sh)}")
+            fps = getattr(profile, "fps_limit", None)
+            if fps:
+                vf_parts.append(f"fps={int(fps)}")
+            if vf_parts:
+                args += ["-vf", ",".join(vf_parts)]
+
+            # x264 tuning for UDP stability (and internal gen)
+            if vid_codec == "libx264":
+                preset = (getattr(profile, "x264_preset", "") or "veryfast").strip()
+                tune = (getattr(profile, "x264_tune", "") or "zerolatency").strip()
+                gop = getattr(profile, "gop_size", None) or 50
+                args += [
+                    "-preset", preset,
+                    "-tune", tune,
+                    "-pix_fmt", "yuv420p",
+                    "-g", str(int(gop)),
+                    "-x264-params", "repeat-headers=1",
+                ]
+
+                # Optional rate control
+                vb = getattr(profile, "video_bitrate_k", None)
+                if vb:
+                    args += ["-b:v", f"{int(vb)}k"]
+                    vmax = getattr(profile, "video_maxrate_k", None)
+                    vbuf = getattr(profile, "video_bufsize_k", None)
+                    if vmax:
+                        args += ["-maxrate", f"{int(vmax)}k"]
+                    if vbuf:
+                        args += ["-bufsize", f"{int(vbuf)}k"]
+
+        # ---- Audio ----
+        aud_mode = getattr(profile, "audio_mode", AudioMode.COPY)
+
+        if (not is_internal_gen) and (aud_mode == AudioMode.COPY):
+            args += ["-c:a", "copy"]
+            return
+
+        if aud_mode == AudioMode.DISABLE:
+            args += ["-an"]
+            return
+
+        # Encode audio (internal gen always encodes)
+        aud_codec = (getattr(profile, "audio_codec", "") or "aac").strip()
+        args += ["-c:a", aud_codec]
+        if aud_codec == "aac":
+            abr = getattr(profile, "audio_bitrate_k", None) or 128
+            args += ["-b:a", f"{int(abr)}k", "-ac", "2"]
+
 
     # ------------------------
     # Record output

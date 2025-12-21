@@ -7,6 +7,10 @@ from django.urls import path, reverse
 from django.utils import timezone
 
 from .models import Channel, InputType, TimeShiftProfile, OutputProfile, OutputTarget
+from .models import VideoMode, AudioMode
+
+from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
 
 
 class OutputTargetInline(admin.TabularInline):
@@ -24,77 +28,166 @@ class TimeShiftProfileInline(admin.StackedInline):
     fields = ("enabled", "delay_seconds")
 
 
-# @admin.register(OutputProfile)
-# class OutputProfileAdmin(admin.ModelAdmin):
-#     list_display = (
-#         "id",
-#         "name",
-#         "enabled",
-#         "output_profile",
-#         "input_type",
-#         "input_url",
-#         "output_profile",
-#         "output_type",
-#         "primary_target",
-#         "playback_tail_enabled",
-#         "timeshift_delay",
-#         "schedule_summary",
-#         "auto_delete_enabled",
-#         "auto_delete_after_segments",
-#         "auto_delete_after_days",
-#         "created_at",
-#     )
-#
-#     list_filter = ("is_active", "video_mode", "audio_mode")
-#     search_fields = ("name",)
-#     fieldsets = (
-#         (None, {"fields": ("name", "is_active")}),
-#         ("Mode", {"fields": ("video_mode", "encoder_preference")}),
-#         ("FILE input", {"fields": ("realtime_input", "loop_input")}),
-#         ("Encoding basics", {"fields": ("video_codec", "audio_mode", "audio_codec")}),
-#         ("UDP defaults", {"fields": ("default_pkt_size", "default_overrun_nonfatal", "default_ttl")}),
-#     )
-
 @admin.register(OutputProfile)
 class OutputProfileAdmin(admin.ModelAdmin):
-    list_display = (
-        "id", "name", "is_active", "video_mode", "encoder_preference",
-        "video_summary", "audio_summary",
-        "realtime_input", "loop_input",
-    )
-    list_filter = ("is_active", "video_mode", "encoder_preference")
-    search_fields = ("name",)
+    """
+    OutputProfile = HOW we build the stream (COPY vs ENCODE).
+    Targets = WHERE we send it (OutputTarget).
 
+    Admin guidance (PC/TV-first):
+    - COPY is preferred when input is already stable MPEG-TS with H.264/AAC and you just restream.
+    - ENCODE is preferred when:
+        * input codecs are unknown/inconsistent,
+        * you want stable H.264 + AAC for TVs/players,
+        * you want scaling/FPS limiting,
+        * or you're generating INTERNAL test stream (always encoded).
+    """
+
+    # ---------- List view ----------
+    list_display = (
+        "id",
+        "name",
+        "is_active",
+        "video_mode",
+        "audio_mode",
+        "encoder_preference",
+        "video_summary",
+        "audio_summary",
+        "realtime_input",
+        "loop_input",
+        "default_pkt_size",
+        "default_overrun_nonfatal",
+        "default_ttl",
+        "created_at",
+    )
+    list_filter = ("is_active", "video_mode", "audio_mode", "encoder_preference", "realtime_input", "loop_input")
+    search_fields = ("name",)
+    ordering = ("name",)
+
+    # Keep name clickable
+    list_display_links = ("name",)
+
+    # Quick edit from list (best productivity fields)
+    list_editable = (
+        "is_active",
+        "video_mode",
+        "audio_mode",
+        "encoder_preference",
+        "realtime_input",
+        "loop_input",
+    )
+
+    # ---------- Form layout ----------
+    fieldsets = (
+        ("Profile Identity", {
+            "fields": ("name", "is_active"),
+            "description": (
+                "Tip: Keep one default COPY profile for normal restreaming, and optionally one ENCODE profile "
+                "for 'stable H.264 + AAC' output (best for TVs/PC players)."
+            ),
+        }),
+        ("When to use this profile", {
+            "fields": ("video_mode", "audio_mode", "encoder_preference"),
+            "description": (
+                "<b>Recommended:</b><br>"
+                "• <b>COPY</b> when the source is already H.264/AAC in MPEG-TS and plays well.<br>"
+                "• <b>ENCODE</b> when you want maximum receiver compatibility (TV/PC), or input codecs vary.<br>"
+                "• <b>Internal Generator</b> (test channel) is always encoded regardless of COPY settings."
+            ),
+        }),
+        ("FILE input behavior (only for input_type=FILE)", {
+            "fields": ("realtime_input", "loop_input"),
+            "description": (
+                "• <b>realtime_input</b> adds <code>-re</code> so file playback behaves like a live stream "
+                "(recommended for 'live file channel').<br>"
+                "• <b>loop_input</b> adds <code>-stream_loop -1</code> to loop forever."
+            ),
+        }),
+        ("Video encoding (only used when video_mode=ENCODE)", {
+            "fields": (
+                "video_codec",
+                ("x264_preset", "x264_tune"),
+                ("video_bitrate_k", "video_maxrate_k", "video_bufsize_k"),
+                ("gop_size", "fps_limit"),
+                ("scale_width", "scale_height"),
+            ),
+            "description": (
+                "<b>PC/TV stability defaults:</b> libx264 + yuv420p + repeat headers + zerolatency.<br>"
+                "Suggested starting point: video_bitrate_k=2500–5000, gop_size=50 (for 25fps).<br>"
+                "Leave blank to use ffmpeg defaults."
+            ),
+        }),
+        ("Audio encoding (used when audio_mode=ENCODE)", {
+            "fields": ("audio_codec", "audio_bitrate_k"),
+            "description": (
+                "<b>Recommended for compatibility:</b> AAC at 128k or 192k.<br>"
+                "If audio_mode=COPY, audio_codec/audio_bitrate are ignored."
+            ),
+        }),
+        ("UDP output defaults (applied when target_url lacks params)", {
+            "fields": ("default_pkt_size", "default_overrun_nonfatal", "default_ttl"),
+            "description": (
+                "These are used as defaults when an OutputTarget leaves the override fields blank "
+                "and when the target_url does not already contain those query parameters."
+            ),
+        }),
+        ("Timestamps", {
+            "fields": ("created_at",),
+        }),
+    )
+
+    readonly_fields = ("created_at",)
+
+    # ---------- Summaries ----------
     @admin.display(description="Video")
-    def video_summary(self, obj):
-        if obj.video_mode == "COPY":
-            return "COPY"
+    def video_summary(self, obj: OutputProfile) -> str:
+        if obj.video_mode == VideoMode.COPY:
+            return "COPY (no re-encode)"
+
         parts = []
-        if getattr(obj, "video_bitrate_k", None):
-            parts.append(f"{obj.video_bitrate_k}k")
-        if getattr(obj, "scale_width", None) and getattr(obj, "scale_height", None):
-            parts.append(f"{obj.scale_width}x{obj.scale_height}")
-        if getattr(obj, "fps_limit", None):
-            parts.append(f"{obj.fps_limit}fps")
-        return "ENCODE " + (" / ".join(parts) if parts else "")
+        if getattr(obj, "video_codec", None):
+            parts.append(obj.video_codec)
+
+        vb = getattr(obj, "video_bitrate_k", None)
+        if vb:
+            parts.append(f"{vb}k")
+
+        sw = getattr(obj, "scale_width", None)
+        sh = getattr(obj, "scale_height", None)
+        if sw and sh:
+            parts.append(f"{sw}x{sh}")
+
+        fps = getattr(obj, "fps_limit", None)
+        if fps:
+            parts.append(f"{fps}fps")
+
+        return "ENCODE: " + (" / ".join(parts) if parts else "defaults")
 
     @admin.display(description="Audio")
-    def audio_summary(self, obj):
-        mode = getattr(obj, "audio_mode", "copy") or "copy"
-        if mode == "copy":
-            return "copy"
-        br = getattr(obj, "audio_bitrate_k", None) or "-"
-        return f"aac {br}k"
+    def audio_summary(self, obj: OutputProfile) -> str:
+        mode = getattr(obj, "audio_mode", AudioMode.COPY) or AudioMode.COPY
+
+        if mode == AudioMode.COPY:
+            return "COPY (no re-encode)"
+        if mode == AudioMode.DISABLE:
+            return "DISABLED"
+
+        # ENCODE
+        codec = (getattr(obj, "audio_codec", "") or "aac").strip()
+        br = getattr(obj, "audio_bitrate_k", None) or 128
+        return f"ENCODE: {codec} {br}k"
 
 
 @admin.register(OutputTarget)
 class OutputTargetAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "channel", "enabled", "protocol", "target_url","overrun_nonfatal", "fifo_size", "buffer_size", "pkt_size", "ttl", "created_at")
+    list_display = ("id", "name", "channel", "enabled", "protocol", "target_url", "overrun_nonfatal", "fifo_size",
+                    "buffer_size", "pkt_size", "ttl", "created_at")
     list_filter = ("enabled", "protocol")
     search_fields = ("name", "target_url", "channel__name")
     list_display_links = ("name",)
     # Editable in list view (no legacy output fields)
-    list_editable = [ "enabled", "target_url", "overrun_nonfatal", "fifo_size", "buffer_size", "pkt_size", "protocol", "ttl"]
+    list_editable = ["enabled", "target_url", "overrun_nonfatal", "fifo_size", "buffer_size", "pkt_size", "protocol",
+                     "ttl"]
 
 
 @admin.register(Channel)
@@ -121,23 +214,56 @@ class ChannelAdmin(admin.ModelAdmin):
             obj.output_profile = prof
         super().save_model(request, obj, form, change)
 
-        # HARD DEPRECATION: Channel.output_target is not used at runtime anymore.
-        # Ensure every channel has at least one OutputTarget so the UI/runtime are unambiguous.
         if obj.output_targets.count() == 0:
-            # Use legacy field only as a one-time bootstrap value (or its default).
-            url = (getattr(obj, "output_target", "") or "").strip() or self._test_output_url()
+            # No legacy bootstrap: always seed from TEST_CHANNEL_OUTPUT_URL (or default).
             OutputTarget.objects.create(
                 channel=obj,
                 name="Target 1",
                 enabled=True,
                 protocol="udp_mpegts",
-                target_url=url,
-                pkt_size=None,
-                overrun_nonfatal=None,
+                target_url=self._test_output_url(),
+                pkt_size=None,  # inherit profile
+                overrun_nonfatal=None,  # inherit profile
                 ttl=None,
             )
 
     change_list_template = "admin/transcoder/channel/change_list.html"
+
+    @admin.display(description="Output targets")
+    def output_targets_list(self, obj):
+        """
+        Show all OutputTargets:
+        - Enabled first (green)
+        - Disabled after (red)
+        """
+        qs = obj.output_targets.all().order_by("-enabled", "id")
+        # qs = obj.output_targets.filter(enabled=True).order_by("id") # Show only enabled targets
+        if not qs.exists():
+            return "-"
+
+        rows = []
+        for t in qs:
+            if t.enabled:
+                # Green for enabled
+                label = format_html(
+                    '<span style="color:#3fb950; font-weight:500;">{}</span>',
+                    t.target_url,
+                )
+            else:
+                # Red for disabled
+                label = format_html(
+                    # '<span style="color:#f85149;">{} (disabled)</span>',
+                    '<span style="color:#f85149;">{}</span>',
+                    t.target_url,
+                )
+
+            rows.append((label,))
+
+        return format_html_join(mark_safe("<br>"), "{}", rows)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.prefetch_related("output_targets")
 
     list_display = (
         "id",
@@ -146,14 +272,15 @@ class ChannelAdmin(admin.ModelAdmin):
         "is_test_channel",
         "input_type",
         "input_url",
-        "primary_target",
+        # "primary_target",
+        "output_targets_list",
         "auto_delete_enabled",
         "playback_tail_enabled",
     )
     search_fields = ("name", "input_url")
     list_display_links = ("name",)
     # Editable in list view (no legacy output fields)
-    list_editable = [ "enabled", "input_type", "input_url"]
+    list_editable = ["enabled", "input_type", "input_url"]
     list_filter = (
         "enabled",
         "input_type",
@@ -194,7 +321,6 @@ class ChannelAdmin(admin.ModelAdmin):
                 getattr(chan, "timeshift_profile", None)
                 or getattr(chan, "timeshiftprofile", None)
         )
-
 
     def timeshift_delay(self, obj: Channel):
         prof = self._get_ts_profile(obj)
@@ -304,15 +430,6 @@ class ChannelAdmin(admin.ModelAdmin):
 
         profile = OutputProfile.get_default_copy()
 
-        # chan = Channel.objects.create(
-        #     name="__TEST__ Internal Generator",
-        #     is_test_channel=True,
-        #     enabled=False,  # start button will enable it
-        #     input_type=InputType.INTERNAL_GENERATOR,
-        #     input_url="internal://generator",
-        #     output_profile=profile,
-        #     # schedules whatever your project uses…
-        # )
         defaults = self._build_test_defaults()
         defaults.pop("output_profile", None)  # just in case (safe)
         chan = Channel.objects.create(

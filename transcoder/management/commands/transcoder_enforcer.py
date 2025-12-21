@@ -1,5 +1,5 @@
 # transcoder/management/commands/transcoder_enforcer.py
-import subprocess, time
+import subprocess, time, logging
 from typing import Dict, Tuple
 from transcoder.models import OutputTarget
 from pathlib import Path
@@ -10,6 +10,8 @@ from django.utils import timezone
 
 from transcoder.ffmpeg_runner import FFmpegJobConfig
 from transcoder.models import Channel, JobPurpose
+
+logger = logging.getLogger(__name__)
 
 JobKey = Tuple[str, int, int | None]  # (purpose, channel_id, target_id)
 
@@ -149,6 +151,11 @@ class Command(BaseCommand):
             while True:
                 now = timezone.localtime()
                 channels = list(Channel.objects.filter(enabled=True))
+                # Preload enabled targets for all channels in one query (avoids per-job .get())
+                targets_by_id = {
+                    t.id: t
+                    for t in OutputTarget.objects.filter(channel__in=channels, enabled=True)
+                }
 
                 desired_jobs: Dict[JobKey, str] = {}
 
@@ -200,7 +207,11 @@ class Command(BaseCommand):
                         purpose, channel_id, target_id = key
                         if purpose == JobPurpose.PLAYBACK:
                             this_chan = next(c for c in channels if c.id == channel_id)
-                            t = OutputTarget.objects.get(pk=target_id)
+                            t = targets_by_id.get(target_id)
+                            if not t:
+                                # Target was disabled/deleted between loops; treat as not desired
+                                logger.info("Skipping job for missing target_id=%s", target_id)
+                                continue
 
                             try:
                                 desired_cmd = FFmpegJobConfig(
@@ -234,7 +245,11 @@ class Command(BaseCommand):
 
                     try:
                         if purpose == JobPurpose.PLAYBACK:
-                            t = OutputTarget.objects.get(pk=target_id)
+                            t = targets_by_id.get(target_id)
+                            if not t:
+                                # Target was disabled/deleted between loops; treat as not desired
+                                logger.info("Skipping job for missing target_id=%s", target_id)
+                                continue
                             job = FFmpegJobConfig(channel=chan, purpose=purpose, output_target=t)
                         else:
                             job = FFmpegJobConfig(channel=chan, purpose=purpose)

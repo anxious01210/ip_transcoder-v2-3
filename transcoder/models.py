@@ -4,6 +4,7 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MaxValueValidator
+from django.utils.translation import gettext_lazy as _
 
 
 class InputType(models.TextChoices):
@@ -31,6 +32,29 @@ class AudioMode(models.TextChoices):
     COPY = "copy", "Copy (no re-encode)"
     ENCODE = "encode", "Encode (re-encode)"
     DISABLE = "disable", "Disable (no audio)"
+
+
+class X264Preset(models.TextChoices):
+    # Practical presets for real-time systems (avoid placebo)
+    ULTRAFAST = "ultrafast", _("ultrafast")
+    SUPERFAST = "superfast", _("superfast")
+    VERYFAST = "veryfast", _("veryfast")
+    FASTER = "faster", _("faster")
+    FAST = "fast", _("fast")
+    MEDIUM = "medium", _("medium")
+    SLOW = "slow", _("slow")
+    SLOWER = "slower", _("slower")
+    VERYSLOW = "veryslow", _("veryslow")
+
+
+class X264Tune(models.TextChoices):
+    # Practical tunes (UDP live: zerolatency is usually best)
+    ZEROLATENCY = "zerolatency", _("zerolatency")
+    FASTDECODE = "fastdecode", _("fastdecode")
+    FILM = "film", _("film")
+    ANIMATION = "animation", _("animation")
+    GRAIN = "grain", _("grain")
+    STILLIMAGE = "stillimage", _("stillimage")
 
 
 class JobPurpose(models.TextChoices):
@@ -75,6 +99,54 @@ class OutputProfile(models.Model):
     audio_mode = models.CharField(max_length=20, choices=AudioMode.choices, default=AudioMode.COPY)
     audio_codec = models.CharField(max_length=50, blank=True, default="aac", help_text="When encoding audio, e.g. aac")
 
+    # ---- Phase 3 encode knobs (PC/TV stability first) ----
+    # If blank/null -> ffmpeg defaults apply.
+    video_bitrate_k = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Target video bitrate in kbits (e.g. 2500). Only used when video_mode=ENCODE.",
+    )
+    video_maxrate_k = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Optional maxrate in kbits for VBV (e.g. 3000). Only used when video_mode=ENCODE.",
+    )
+    video_bufsize_k = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Optional bufsize in kbits for VBV (e.g. 6000). Only used when video_mode=ENCODE.",
+    )
+    x264_preset = models.CharField(
+        max_length=30,
+        choices=X264Preset.choices,
+        default=X264Preset.VERYFAST,
+        help_text="x264 preset. Recommended: veryfast (good default), faster/fast (better quality), "
+                  "superfast/ultrafast (lowest CPU). Used only when video_codec=libx264.",
+    )
+    x264_tune = models.CharField(
+        max_length=30,
+        choices=X264Tune.choices,
+        default=X264Tune.ZEROLATENCY,
+        help_text="x264 tune. Recommended for live UDP: zerolatency. Used only when video_codec=libx264.",
+    )
+    gop_size = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="GOP size (e.g. 50 for 25fps). Only used when encoding.",
+    )
+    scale_width = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Optional scale width (must set height too). Only used when encoding.",
+    )
+    scale_height = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Optional scale height (must set width too). Only used when encoding.",
+    )
+    fps_limit = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Optional output FPS cap (e.g. 25). Only used when encoding.",
+    )
+    audio_bitrate_k = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Audio bitrate in kbits (e.g. 128). Only used when audio_mode=ENCODE.",
+    )
+
     # UDP transport defaults (applied if missing in target_url; per-target fields can override)
     default_pkt_size = models.PositiveIntegerField(null=True, blank=True,
                                                    help_text="Default pkt_size for UDP output (e.g. 1316).")
@@ -113,6 +185,11 @@ class OutputProfile(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def clean(self):
+        # If one scale dimension is set, require the other too.
+        if (self.scale_width is None) ^ (self.scale_height is None):
+            raise ValueError("scale_width and scale_height must be set together (or both blank).")
 
 
 class OutputTarget(models.Model):
@@ -198,30 +275,6 @@ class Channel(models.Model):
         blank=True,
         default="",
         help_text="Optional: network interface/IP for multicast receiving (advanced usage).",
-    )
-
-    # Output (ONE target only)
-    output_type = models.CharField(
-        max_length=20,
-        choices=OutputType.choices,
-        default=OutputType.UDP_TS,  # ✅ default prevents migration prompt
-    )
-
-    output_target = models.CharField(
-        max_length=512,
-        default="udp://127.0.0.1:5002",  # ✅ default prevents migration prompt
-        help_text=(
-            "Destination for the channel output.\n\n"
-            "✅ Unicast (send to one receiver):\n"
-            "  udp://10.120.0.111:5000?pkt_size=1316\n\n"
-            "✅ Multicast (send to many receivers):\n"
-            "  udp://239.0.0.1:5000?pkt_size=1316&ttl=16\n\n"
-            "Notes:\n"
-            "• You can enter a multicast group (239.x/232.x) even if you think of it as “unicast mode” — "
-            "it’s still the same UDP-TS output; only the destination IP changes.\n"
-            "• Useful options: pkt_size=1316, ttl=… (multicast), localaddr=… (force interface, helpful on Windows).\n"
-        )
-        ,
     )
 
     # Tail behavior (your earlier requirement)
