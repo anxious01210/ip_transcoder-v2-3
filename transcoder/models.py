@@ -68,6 +68,8 @@ class EncoderPreference(models.TextChoices):
     INTEL_FIRST = "intel_first", "Intel first (QSV → NVENC → CPU)"
     CPU_ONLY = "cpu_only", "CPU only"
 
+class OutputProtocol(models.TextChoices):
+    UDP_MPEGTS = "udp_mpegts", _("UDP MPEG-TS")
 
 class OutputProfile(models.Model):
     """Defines HOW a stream is produced (copy vs encode). Phase 3 uses COPY/ENCODE only (HW fallback comes later)."""
@@ -197,22 +199,99 @@ class OutputTarget(models.Model):
 
     channel = models.ForeignKey("Channel", on_delete=models.CASCADE, related_name="output_targets")
     name = models.CharField(max_length=80, default="Target")
-    enabled = models.BooleanField(default=True, db_index=True)
+    enabled = models.BooleanField(
+        default=True,
+        help_text=(
+            "Enable or disable this output target. "
+            "If disabled, FFmpeg will NOT send any stream to this target."
+        ),
+    )
+
     process_pid = models.IntegerField(null=True, blank=True, editable=False)
 
     # For now we support UDP MPEG-TS
-    protocol = models.CharField(max_length=40, default="udp_mpegts",
-                                help_text="Future: srt/hls/etc. Phase 1-4 uses udp_mpegts.")
-    target_url = models.CharField(max_length=500, help_text="e.g. udp://192.168.1.26:5002")
+    protocol = models.CharField(
+        max_length=20,
+        choices=OutputProtocol.choices,
+        default=OutputProtocol.UDP_MPEGTS,
+        help_text=(
+            "Streaming protocol used for this target.\n\n"
+            "Currently supported:\n"
+            "• udp_mpegts → UDP MPEG-TS (recommended, stable for LAN/TVs)\n\n"
+            "Future support: SRT, HLS, RTMP."
+        ),
+    )
+
+    target_url = models.CharField(
+        max_length=500,
+        help_text=(
+            "Full destination URL where the stream will be sent.\n\n"
+            "Examples:\n"
+            "• udp://192.168.1.29:5002   (LAN unicast)\n"
+            "• udp://239.10.10.1:5000   (Multicast)\n\n"
+            "Advanced:\n"
+            "You may append query parameters such as:\n"
+            "• pkt_size=1316\n"
+            "• overrun_nonfatal=1\n\n"
+            "Example:\n"
+            "udp://239.10.10.1:5000?pkt_size=1316&overrun_nonfatal=1"
+        ),
+    )
 
     # Per-target UDP overrides (optional)
-    pkt_size = models.PositiveIntegerField(null=True, blank=True)
-    overrun_nonfatal = models.BooleanField(null=True, blank=True,
-                                           help_text="Override overrun_nonfatal (1/0). Leave blank to inherit profile default.")
-    fifo_size = models.PositiveIntegerField(null=True, blank=True)
-    buffer_size = models.PositiveIntegerField(null=True, blank=True)
-    ttl = models.PositiveIntegerField(null=True, blank=True, validators=[MaxValueValidator(255)],
-                                      help_text="TTL for multicast (optional).")
+    pkt_size = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text=(
+            "UDP packet size in bytes.\n\n"
+            "Recommended:\n"
+            "• 1316 (best for MPEG-TS over UDP)\n\n"
+            "Leave blank to inherit the OutputProfile default."
+        ),
+    )
+
+    overrun_nonfatal = models.BooleanField(
+        null=True,
+        blank=True,
+        help_text=(
+            "Controls FFmpeg behavior when the UDP send buffer overflows.\n\n"
+            "• Yes (1): Continue streaming even if packets are dropped (recommended)\n"
+            "• No (0): Stop FFmpeg on buffer overrun\n"
+            "• Blank: Inherit from OutputProfile default"
+        ),
+    )
+
+    fifo_size = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text=(
+            "Size of FFmpeg UDP FIFO buffer.\n\n"
+            "Use this only if you experience packet drops.\n"
+            "Example values: 1000000 – 5000000\n\n"
+            "Leave blank for FFmpeg default."
+        ),
+    )
+
+    buffer_size = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text=(
+            "Socket buffer size for UDP output.\n\n"
+            "Only needed for high-bitrate or unstable networks.\n"
+            "Leave blank to use system defaults."
+        ),
+    )
+
+    ttl = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text=(
+            "Time-To-Live (TTL) for multicast packets.\n\n"
+            "• 1 → local subnet only (recommended)\n"
+            "• 2–5 → routed multicast\n\n"
+            "Used only for multicast addresses (239.x.x.x)."
+        ),
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 

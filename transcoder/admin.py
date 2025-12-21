@@ -13,12 +13,27 @@ from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 
 
+# class OutputTargetInline(admin.TabularInline):
+#     model = OutputTarget
+#     extra = 0
+#     fields = ("enabled", "name", "target_url", "pkt_size", "overrun_nonfatal", "ttl")
+#     ordering = ("id",)
 class OutputTargetInline(admin.TabularInline):
     model = OutputTarget
     extra = 0
-    fields = ("enabled", "name", "target_url", "pkt_size", "overrun_nonfatal", "ttl")
-    ordering = ("id",)
+    fields = ("enabled", "name", "target_url", "pkt_size", "overrun_nonfatal", "ttl", "edit_popup")
+    readonly_fields = ("edit_popup",)
 
+    @admin.display(description="Edit")
+    def edit_popup(self, obj):
+        if not obj or not obj.pk:
+            return "-"
+        url = reverse("admin:transcoder_outputtarget_change", args=[obj.pk])
+        # Django admin popup mode
+        return format_html(
+            '<a class="button" href="{}?_popup=1" onclick="return showAddAnotherPopup(this);">Edit</a>',
+            url
+        )
 
 class TimeShiftProfileInline(admin.StackedInline):
     """Edit delay settings directly from the Channel page."""
