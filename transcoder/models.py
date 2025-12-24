@@ -68,8 +68,10 @@ class EncoderPreference(models.TextChoices):
     INTEL_FIRST = "intel_first", "Intel first (QSV → NVENC → CPU)"
     CPU_ONLY = "cpu_only", "CPU only"
 
+
 class OutputProtocol(models.TextChoices):
     UDP_MPEGTS = "udp_mpegts", _("UDP MPEG-TS")
+
 
 class OutputProfile(models.Model):
     """Defines HOW a stream is produced (copy vs encode). Phase 3 uses COPY/ENCODE only (HW fallback comes later)."""
@@ -215,9 +217,9 @@ class OutputTarget(models.Model):
         choices=OutputProtocol.choices,
         default=OutputProtocol.UDP_MPEGTS,
         help_text=(
-            "Streaming protocol used for this target.\n\n"
-            "Currently supported:\n"
-            "• udp_mpegts → UDP MPEG-TS (recommended, stable for LAN/TVs)\n\n"
+            "Streaming protocol used for this target.<br><br>"
+            "Currently supported:<br>"
+            "• udp_mpegts → UDP MPEG-TS (recommended, stable for LAN/TVs)<br><br>"
             "Future support: SRT, HLS, RTMP."
         ),
     )
@@ -225,15 +227,15 @@ class OutputTarget(models.Model):
     target_url = models.CharField(
         max_length=500,
         help_text=(
-            "Full destination URL where the stream will be sent.\n\n"
-            "Examples:\n"
-            "• udp://192.168.1.29:5002   (LAN unicast)\n"
-            "• udp://239.10.10.1:5000   (Multicast)\n\n"
-            "Advanced:\n"
-            "You may append query parameters such as:\n"
-            "• pkt_size=1316\n"
-            "• overrun_nonfatal=1\n\n"
-            "Example:\n"
+            "Full destination URL where the stream will be sent.<br><br>"
+            "<strong>Examples:</strong><br>"
+            "• udp://192.168.1.29:5002   (LAN unicast)<br>"
+            "• udp://239.10.10.1:5000   (Multicast)<br><br>"
+            "<strong>Advanced:</strong><br>"
+            "You may append query parameters such as:<br>"
+            "• pkt_size=1316<br>"
+            "• overrun_nonfatal=1<br><br>"
+            "<strong>Example:</strong><br>"
             "udp://239.10.10.1:5000?pkt_size=1316&overrun_nonfatal=1"
         ),
     )
@@ -243,9 +245,9 @@ class OutputTarget(models.Model):
         null=True,
         blank=True,
         help_text=(
-            "UDP packet size in bytes.\n\n"
-            "Recommended:\n"
-            "• 1316 (best for MPEG-TS over UDP)\n\n"
+            "UDP packet size in bytes.<br><br>"
+            "<strong>Recommended:</strong><br>"
+            "• 1316 (best for MPEG-TS over UDP)<br><br>"
             "Leave blank to inherit the OutputProfile default."
         ),
     )
@@ -253,11 +255,18 @@ class OutputTarget(models.Model):
     overrun_nonfatal = models.BooleanField(
         null=True,
         blank=True,
+        # help_text=(
+        #     "Controls FFmpeg behavior when the UDP send buffer overflows.\n\n"
+        #     "• Yes (1): Continue streaming even if packets are dropped (recommended)\n"
+        #     "• No (0): Stop FFmpeg on buffer overrun\n"
+        #     "• Blank: Inherit from OutputProfile default"
+        # ),
         help_text=(
-            "Controls FFmpeg behavior when the UDP send buffer overflows.\n\n"
-            "• Yes (1): Continue streaming even if packets are dropped (recommended)\n"
-            "• No (0): Stop FFmpeg on buffer overrun\n"
-            "• Blank: Inherit from OutputProfile default"
+            "Controls FFmpeg behavior when the UDP send buffer overflows.<br><br>"
+            "<strong>Yes (1):</strong> Continue streaming even if packets are dropped "
+            "(recommended)<br>"
+            "<strong>No (0):</strong> Stop FFmpeg on buffer overrun<br>"
+            "<strong>Blank:</strong> Inherit from OutputProfile default"
         ),
     )
 
@@ -265,9 +274,9 @@ class OutputTarget(models.Model):
         null=True,
         blank=True,
         help_text=(
-            "Size of FFmpeg UDP FIFO buffer.\n\n"
-            "Use this only if you experience packet drops.\n"
-            "Example values: 1000000 – 5000000\n\n"
+            "Size of FFmpeg UDP FIFO buffer.<br><br>"
+            "Use this only if you experience packet drops.<br>"
+            "Example values: 1000000 – 5000000<br><br>"
             "Leave blank for FFmpeg default."
         ),
     )
@@ -276,8 +285,8 @@ class OutputTarget(models.Model):
         null=True,
         blank=True,
         help_text=(
-            "Socket buffer size for UDP output.\n\n"
-            "Only needed for high-bitrate or unstable networks.\n"
+            "Socket buffer size for UDP output.<br><br>"
+            "Only needed for high-bitrate or unstable networks.<br>"
             "Leave blank to use system defaults."
         ),
     )
@@ -286,9 +295,9 @@ class OutputTarget(models.Model):
         null=True,
         blank=True,
         help_text=(
-            "Time-To-Live (TTL) for multicast packets.\n\n"
-            "• 1 → local subnet only (recommended)\n"
-            "• 2–5 → routed multicast\n\n"
+            "Time-To-Live (TTL) for multicast packets.<br><br>"
+            "<strong>• 1 </strong>→ local subnet only (recommended)<br>"
+            "<strong>• 2–5 </strong>→ routed multicast<br><br>"
             "Used only for multicast addresses (239.x.x.x)."
         ),
     )

@@ -287,7 +287,7 @@ class ChannelAdmin(admin.ModelAdmin):
         "is_test_channel",
         "input_type",
         "input_url",
-        # "primary_target",
+        "output_profile",
         "output_targets_list",
         "auto_delete_enabled",
         "playback_tail_enabled",
@@ -295,7 +295,7 @@ class ChannelAdmin(admin.ModelAdmin):
     search_fields = ("name", "input_url")
     list_display_links = ("name",)
     # Editable in list view (no legacy output fields)
-    list_editable = ["enabled", "input_type", "input_url"]
+    list_editable = ["enabled", "input_type", "input_url", "output_profile",]
     list_filter = (
         "enabled",
         "input_type",
